@@ -1070,14 +1070,10 @@ body::before{
           </div>
         </div>
 
-        <!-- Video overview (bilingual) -->
+        <!-- Video overview (Mandarin) -->
         <div class="detail-box blue" id="videoCard">
-          <h4>🎬 成語影片總覽</h4>
-          <div style="display:flex;gap:8px;margin:8px 0 6px;flex-wrap:wrap">
-            <button class="deck-toggle active" data-vid="mandarin" onclick="switchVideo('mandarin')">🗣️ 普通話版</button>
-            <button class="deck-toggle" data-vid="cantonese" onclick="switchVideo('cantonese')">🗣️ 廣東話版</button>
-          </div>
-          <div id="videoPlayer" style="margin-top:6px">
+          <h4>🎬 成語影片總覽 · 普通話旁白</h4>
+          <div id="videoPlayer" style="margin-top:8px">
             <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ 載入中…</p>
           </div>
         </div>
@@ -2216,18 +2212,12 @@ document.addEventListener('click', e => {
   }
 });
 
-function switchVideo(lang){
-  const src = lang === 'mandarin'
-    ? 'assets/ch_idioms/video/summary_mandarin.mp4'
-    : 'assets/ch_idioms/video/summary.mp4';
-  const label = lang === 'mandarin' ? '🗣️ 普通話旁白 · NLM 新生成' : '🗣️ 廣東話旁白 · 原版';
-  document.querySelectorAll('#videoCard .deck-toggle').forEach(b =>
-    b.classList.toggle('active', b.dataset.vid === lang));
+function switchVideo(){
   document.getElementById('videoPlayer').innerHTML = `
     <video controls style="width:100%;border-radius:12px;margin-top:6px" preload="metadata">
-      <source src="${src}" type="video/mp4">
+      <source src="assets/ch_idioms/video/summary_mandarin.mp4" type="video/mp4">
     </video>
-    <p style="font-size:0.78rem;opacity:0.75;margin-top:6px">${label}</p>
+    <p style="font-size:0.78rem;opacity:0.75;margin-top:6px">🗣️ 普通話旁白 · NLM 生成</p>
   `;
 }
 
@@ -2245,8 +2235,8 @@ function checkExtraAssets(){
         `;
       }
     }).catch(()=>{});
-  // video (default to Mandarin)
-  switchVideo('mandarin');
+  // video (Mandarin only)
+  switchVideo();
   // Initialize 3D book viewer (only once per session)
   if(!document.querySelector('#book3d .book3d-page')){
     initBook();
