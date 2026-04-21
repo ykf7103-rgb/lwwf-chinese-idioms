@@ -521,6 +521,51 @@ body::before{
   border-color:var(--gold);
 }
 
+/* ====== EDX Exchange ====== */
+.stat-pill.edx{cursor:pointer;transition:all 0.2s;background:rgba(218,165,32,0.3);border-color:var(--gold-light)}
+.stat-pill.edx:hover{transform:scale(1.06);background:rgba(218,165,32,0.5)}
+.edx-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0}
+.edx-tier{
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:3px solid var(--gold-dark);border-radius:14px;padding:16px;text-align:center;
+  transition:all 0.25s;position:relative;
+}
+.edx-tier.tier-gold{border-color:#FFB300;background:linear-gradient(135deg,#FFF8E1,#FFE082)}
+.edx-tier.tier-silver{border-color:#9E9E9E}
+.edx-tier .t-name{font-family:var(--font-han);font-size:1.25rem;font-weight:900;color:var(--red-dark);letter-spacing:2px}
+.edx-tier .t-emoji{font-size:2.2rem;margin:4px 0}
+.edx-tier .t-cost{font-size:0.95rem;color:var(--ink);margin:8px 0 4px}
+.edx-tier .t-arrow{color:var(--jade);font-size:1.1rem;margin:4px 0}
+.edx-tier .t-reward{
+  font-family:var(--font-han);font-size:1.6rem;font-weight:900;color:var(--jade);
+  margin:4px 0 10px;letter-spacing:3px;
+}
+.edx-tier button{
+  width:100%;padding:10px;border:2px solid var(--gold);border-radius:10px;
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  font-family:var(--font-body);font-size:0.95rem;font-weight:700;cursor:pointer;
+  transition:all 0.2s;letter-spacing:1px;
+}
+.edx-tier button:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.edx-tier button:disabled{opacity:0.35;cursor:not-allowed;background:#AAA}
+.edx-tier.tier-gold button{background:linear-gradient(135deg,#FF9800,#E65100)}
+.edx-ratio{position:absolute;top:6px;right:6px;font-size:0.72rem;color:var(--ink);opacity:0.55;background:rgba(255,255,255,0.7);padding:2px 8px;border-radius:8px}
+.edx-stats{
+  display:flex;gap:14px;justify-content:center;padding:14px;margin:10px 0;
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);border:2px solid var(--gold-dark);
+  border-radius:12px;flex-wrap:wrap;
+}
+.edx-stat{text-align:center;min-width:100px}
+.edx-stat .label{font-size:0.8rem;color:var(--ink);opacity:0.7;margin-bottom:2px}
+.edx-stat .value{font-family:var(--font-han);font-size:1.8rem;font-weight:900;color:var(--red-dark)}
+.edx-hist{margin-top:14px;max-height:180px;overflow-y:auto;padding:0 6px}
+.edx-hist h4{font-family:var(--font-han);color:var(--red-dark);margin-bottom:8px;font-size:1rem}
+.edx-hist-row{
+  display:flex;justify-content:space-between;padding:6px 10px;
+  background:rgba(218,165,32,0.08);border-radius:8px;margin-bottom:4px;font-size:0.85rem;
+}
+.edx-hist-row .date{color:var(--ink);opacity:0.6;font-size:0.75rem}
+
 /* ====== Login Overlay ====== */
 .login-overlay{
   position:fixed;inset:0;background:var(--bg-gradient) fixed;
@@ -1005,6 +1050,7 @@ body::before{
     <div class="topbar-stats">
       <div class="stat-pill">⭐ <span id="starCount">0</span>/15</div>
       <div class="stat-pill">🪙 <span id="coinCount">0</span></div>
+      <div class="stat-pill edx" onclick="openEdxModal()" title="點擊兌換 EDX">🏆 <span id="edxCount">0</span> EDX</div>
       <div class="user-badge" id="userBadge" onclick="logout()" title="點擊登出" style="display:none">
         <span id="userName">未登入</span> · 登出
       </div>
@@ -1541,6 +1587,124 @@ async function loadCloudProgress(){
       updateTopbar();
     }
   } catch(e){ console.warn('cloud load failed', e); }
+  // Also refresh EDX state
+  await refreshEdxState();
+}
+
+// ============================================================
+// EDX Exchange (shared with math site · same student_edx table)
+// ============================================================
+const EDX_TIERS = [
+  { coins: 10,  edx: 5,  name: '🥉 基礎', cls: 'tier-bronze' },
+  { coins: 50,  edx: 28, name: '🥈 超值', cls: 'tier-silver' },
+  { coins: 100, edx: 60, name: '🥇 VIP',  cls: 'tier-gold'   },
+];
+let edxSpent = 0;   // total coins ever spent on EDX
+let edxTotal = 0;   // total EDX ever earned
+
+async function refreshEdxState(){
+  if(!currentUser || currentUser.role !== 'student' || !sb){
+    edxSpent = 0; edxTotal = 0; updateTopbar(); return;
+  }
+  try {
+    const { data } = await sb.from('student_edx')
+      .select('coins_spent,edx_earned')
+      .eq('class', currentUser.class).eq('student_number', currentUser.number);
+    edxSpent = (data || []).reduce((s, r) => s + (r.coins_spent || 0), 0);
+    edxTotal = (data || []).reduce((s, r) => s + (r.edx_earned || 0), 0);
+  } catch(e){ console.warn('edx load failed', e); edxSpent = 0; edxTotal = 0; }
+  updateTopbar();
+}
+
+function availableCoins(){ return Math.max(0, coins - edxSpent); }
+
+async function openEdxModal(){
+  if(!currentUser || currentUser.role !== 'student'){
+    alert('🔒 請先登入學生帳戶先可以兌換 EDX');
+    return;
+  }
+  await refreshEdxState();
+
+  let history = [];
+  try {
+    const { data } = await sb.from('student_edx')
+      .select('coins_spent,edx_earned,exchanged_at')
+      .eq('class', currentUser.class).eq('student_number', currentUser.number)
+      .order('exchanged_at', { ascending: false })
+      .limit(8);
+    history = data || [];
+  } catch(e){}
+
+  const avail = availableCoins();
+  const tiersHtml = EDX_TIERS.map(t => {
+    const disabled = avail < t.coins;
+    const ratio = (t.edx / t.coins).toFixed(2);
+    return `
+      <div class="edx-tier ${t.cls}">
+        <div class="edx-ratio">${ratio} × 匯率</div>
+        <div class="t-emoji">${t.name.split(' ')[0]}</div>
+        <div class="t-name">${t.name.split(' ')[1]}</div>
+        <div class="t-cost">${t.coins} 🪙</div>
+        <div class="t-arrow">⬇︎</div>
+        <div class="t-reward">${t.edx} EDX</div>
+        <button ${disabled ? 'disabled' : ''} onclick="doExchange(${t.coins},${t.edx})">
+          ${disabled ? `需要 ${t.coins - avail} 個金幣` : '兌換 →'}
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  const histHtml = history.length
+    ? history.map(h => `
+        <div class="edx-hist-row">
+          <span>🪙 ${h.coins_spent} → 🏆 ${h.edx_earned} EDX</span>
+          <span class="date">${new Date(h.exchanged_at).toLocaleDateString('zh-HK',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>
+        </div>
+      `).join('')
+    : '<p style="text-align:center;color:var(--ink);opacity:0.6;font-size:0.9rem;padding:10px">暫無兌換紀錄</p>';
+
+  openModal(`
+    <div style="max-width:min(640px,92vw)">
+      <h2 style="text-align:center;color:var(--red-dark);font-family:var(--font-han);font-size:1.5rem;margin-bottom:4px">🏆 EDX 兌換中心</h2>
+      <p style="text-align:center;color:var(--ink);opacity:0.7;font-size:0.85rem;margin-bottom:8px">用金幣換取 EDX 積分，與數學網站積分互通</p>
+      <div class="edx-stats">
+        <div class="edx-stat"><div class="label">🪙 可用金幣</div><div class="value">${avail}</div></div>
+        <div class="edx-stat"><div class="label">🪙 已花費</div><div class="value" style="color:var(--gold-dark);font-size:1.3rem">${edxSpent}</div></div>
+        <div class="edx-stat"><div class="label">🏆 EDX 總數</div><div class="value" style="color:var(--jade)">${edxTotal}</div></div>
+      </div>
+      <div class="edx-tiers">${tiersHtml}</div>
+      <div class="edx-hist">
+        <h4>📜 兌換紀錄（最近 8 次）</h4>
+        ${histHtml}
+      </div>
+    </div>
+  `);
+}
+
+async function doExchange(coinsSpent, edxEarned){
+  if(!currentUser || currentUser.role !== 'student' || !sb){
+    alert('🔒 兌換需要連線 · 請先登入');
+    return;
+  }
+  if(availableCoins() < coinsSpent){
+    alert('💰 金幣不足');
+    return;
+  }
+  if(!confirm(`確定用 ${coinsSpent} 🪙 換 ${edxEarned} EDX？`)) return;
+  try {
+    const { error } = await sb.from('student_edx').insert({
+      class: currentUser.class, student_number: currentUser.number,
+      chapter: CHAPTER_ID, coins_spent: coinsSpent, edx_earned: edxEarned,
+    });
+    if(error) throw error;
+    await refreshEdxState();
+    playBeep(880, 0.12);
+    showSuccessBadge();
+    closeModal();
+    setTimeout(() => openEdxModal(), 500);
+  } catch(e){
+    alert('⚠️ 兌換失敗：' + (e.message || e));
+  }
 }
 
 // ============================================================
@@ -1570,8 +1734,14 @@ function loadProgress(){
   }catch(e){}
 }
 function updateTopbar(){
-  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('coinCount').textContent = availableCoinsSafe();
   document.getElementById('starCount').textContent = starsEarned.size;
+  const edxEl = document.getElementById('edxCount');
+  if(edxEl) edxEl.textContent = edxTotal;
+}
+function availableCoinsSafe(){
+  // Safe before EDX state is initialized
+  try { return availableCoins(); } catch(e){ return coins; }
 }
 let _cloudSaveTimer = null;
 function scheduleCloudSave(){
