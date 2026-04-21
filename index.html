@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --ink:#2C1810;--paper:#FFF8E7;--paper-dark:#F4E4BC;
@@ -520,6 +521,127 @@ body::before{
   border-color:var(--gold);
 }
 
+/* ====== Login Overlay ====== */
+.login-overlay{
+  position:fixed;inset:0;background:var(--bg-gradient) fixed;
+  display:none;align-items:center;justify-content:center;z-index:1000;
+  padding:20px;
+}
+.login-overlay.active{display:flex}
+.login-overlay::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(218,165,32,0.12) 0,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(196,30,58,0.1) 0,transparent 40%);
+}
+.login-card{
+  background:var(--paper);border:4px double var(--gold-dark);border-radius:var(--radius);
+  box-shadow:var(--shadow-strong);padding:30px 26px;max-width:420px;width:100%;
+  position:relative;z-index:1;
+}
+.login-card h2{
+  font-family:var(--font-han);color:var(--red-dark);text-align:center;
+  font-size:1.7rem;letter-spacing:4px;margin-bottom:4px;
+}
+.login-card .sub{text-align:center;color:var(--ink);opacity:0.7;font-size:0.85rem;margin-bottom:18px;letter-spacing:1px}
+.login-tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:2px solid var(--gold-dark)}
+.login-tab{
+  flex:1;padding:10px;background:none;border:none;cursor:pointer;
+  font-family:var(--font-body);font-size:0.95rem;font-weight:700;color:var(--ink);
+  border-bottom:3px solid transparent;
+}
+.login-tab.active{color:var(--red-dark);border-bottom-color:var(--red-dark)}
+.login-form{display:none}
+.login-form.active{display:block}
+.login-form label{display:block;margin:10px 0 4px;font-weight:700;color:var(--ink);font-size:0.9rem}
+.login-form select,.login-form input{
+  width:100%;padding:12px 14px;border:2px solid var(--gold-dark);border-radius:10px;
+  background:#FFFDF5;font-family:var(--font-body);font-size:0.95rem;color:var(--ink);
+  margin-bottom:4px;
+}
+.login-form select:focus,.login-form input:focus{outline:none;border-color:var(--red)}
+.login-form button.login-btn{
+  width:100%;margin-top:14px;padding:13px;
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  border:2px solid var(--gold);border-radius:10px;
+  font-family:var(--font-body);font-size:1rem;font-weight:700;cursor:pointer;
+  letter-spacing:2px;
+}
+.login-form button.login-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.login-error{color:var(--red);font-size:0.85rem;margin-top:6px;display:none}
+.login-error.show{display:block}
+.login-hint{font-size:0.78rem;color:var(--ink);opacity:0.6;margin-top:6px;line-height:1.5}
+
+.user-badge{
+  background:rgba(255,248,231,0.2);border:1px solid var(--gold);
+  padding:6px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;
+  color:#FFF8E7;display:flex;align-items:center;gap:6px;cursor:pointer;
+}
+.user-badge:hover{background:rgba(255,248,231,0.3)}
+
+/* ====== 錄音解釋成語 Voice Explain ====== */
+.voice-container{padding:14px}
+.voice-idiom-card{
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:3px solid var(--gold-dark);border-radius:var(--radius-sm);
+  padding:16px;margin-bottom:14px;display:flex;gap:14px;align-items:center;
+}
+.voice-idiom-card .v-img{
+  width:120px;height:120px;border-radius:10px;overflow:hidden;
+  border:2px solid var(--red);flex-shrink:0;
+}
+.voice-idiom-card .v-img img{width:100%;height:100%;object-fit:cover}
+.voice-idiom-card .v-info{flex:1;min-width:0}
+.voice-idiom-card .v-big{
+  font-family:var(--font-han);color:var(--red-dark);font-size:1.8rem;
+  font-weight:900;letter-spacing:4px;margin-bottom:4px;
+}
+.voice-idiom-card .v-pinyin{font-size:0.8rem;color:var(--jade);margin-bottom:6px}
+.voice-idiom-card .v-pick{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.voice-idiom-card .v-pick select{
+  padding:6px 10px;border:2px solid var(--gold-dark);border-radius:8px;
+  font-family:var(--font-body);font-size:0.85rem;background:#FFFDF5;flex:1;min-width:0;
+}
+.voice-prompt{
+  background:#FFFDF5;border-left:5px solid var(--red);border-radius:8px;
+  padding:12px 16px;margin:14px 0;font-size:1rem;line-height:1.7;
+}
+.voice-prompt .q{color:var(--red-dark);font-weight:700;margin-bottom:4px;display:block}
+.voice-input-wrap{
+  background:#FFFDF5;border:2.5px solid var(--gold-dark);border-radius:12px;padding:12px;
+  display:flex;gap:10px;align-items:stretch;
+}
+.voice-input-wrap textarea{
+  flex:1;border:none;background:transparent;resize:none;
+  font-family:var(--font-body);font-size:0.95rem;line-height:1.7;color:var(--ink);
+  min-height:90px;outline:none;
+}
+.voice-mic-btn{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;border:2.5px solid var(--gold);font-size:1.6rem;cursor:pointer;
+  box-shadow:var(--shadow-soft);transition:all 0.2s;flex-shrink:0;align-self:center;
+}
+.voice-mic-btn.recording{
+  animation:pulse 1s infinite;
+  background:linear-gradient(135deg,var(--red-light),var(--red));
+}
+.voice-actions{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.voice-feedback{
+  margin-top:16px;padding:16px;border-radius:12px;
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2.5px solid var(--jade);display:none;
+}
+.voice-feedback.show{display:block;animation:fadeIn 0.5s}
+.voice-feedback.wrong{border-color:var(--red)}
+.voice-score-big{
+  font-family:var(--font-han);font-size:3rem;font-weight:900;text-align:center;
+  color:var(--jade);margin:8px 0;
+}
+.voice-score-big.low{color:var(--red)}
+.voice-fb-text{font-size:1rem;line-height:1.8;color:var(--ink);margin-top:8px}
+.voice-tip{font-size:0.78rem;color:var(--ink);opacity:0.6;margin-top:8px;text-align:center}
+
 /* ====== 主題分類 Theme Sort ====== */
 .sort-area{padding:10px}
 .sort-pool{
@@ -833,6 +955,45 @@ body::before{
 </head>
 <body>
 
+<!-- Login Overlay -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <h2>成語小博士</h2>
+    <p class="sub">樂善堂梁黃蕙芳紀念學校 · 五年級中文</p>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('student')">🎒 學生登入</button>
+      <button class="login-tab" onclick="switchLoginTab('teacher')">👩‍🏫 教師登入</button>
+    </div>
+
+    <div id="studentLoginForm" class="login-form active">
+      <label>班別</label>
+      <select id="classSelect" onchange="updateStudentList()">
+        <option value="">請選擇班別</option>
+        <option value="5A">5A</option>
+        <option value="5B">5B</option>
+        <option value="5C">5C</option>
+        <option value="5D">5D</option>
+        <option value="5F">5F（測試）</option>
+        <option value="7A">7A（試用帳戶）</option>
+      </select>
+      <label>學號</label>
+      <select id="studentSelect" disabled><option>請先選擇班別</option></select>
+      <label>密碼</label>
+      <input type="password" id="studentPassword" placeholder="例：lst21043（即 QR 碼後 5 位）" onkeypress="if(event.key==='Enter')studentLogin()">
+      <p class="login-hint">💡 密碼提示：lst + QR 碼上 5 位數字 · 7A 試用帳戶免密碼</p>
+      <div id="studentLoginError" class="login-error"></div>
+      <button class="login-btn" onclick="studentLogin()">進入學習 →</button>
+    </div>
+
+    <div id="teacherLoginForm" class="login-form">
+      <label>教師密碼</label>
+      <input type="password" id="teacherPassword" placeholder="請輸入教師密碼" onkeypress="if(event.key==='Enter')teacherLogin()">
+      <div id="teacherLoginError" class="login-error">密碼錯誤</div>
+      <button class="login-btn" onclick="teacherLogin()">教師登入 →</button>
+    </div>
+  </div>
+</div>
+
 <div id="app">
 
   <!-- TOPBAR -->
@@ -844,6 +1005,9 @@ body::before{
     <div class="topbar-stats">
       <div class="stat-pill">⭐ <span id="starCount">0</span>/15</div>
       <div class="stat-pill">🪙 <span id="coinCount">0</span></div>
+      <div class="user-badge" id="userBadge" onclick="logout()" title="點擊登出" style="display:none">
+        <span id="userName">未登入</span> · 登出
+      </div>
     </div>
   </div>
 
@@ -856,6 +1020,7 @@ body::before{
     <button class="nav-tab" data-tab="memory">🔄 翻牌記憶</button>
     <button class="nav-tab" data-tab="sort">🧲 主題分類</button>
     <button class="nav-tab" data-tab="scramble">🔤 字字拼字</button>
+    <button class="nav-tab" data-tab="voice">🎤 錄音解釋</button>
     <button class="nav-tab" data-tab="quiz">📝 成語測驗</button>
   </div>
 
@@ -970,6 +1135,63 @@ body::before{
         <div style="font-size:1.2rem">答對：<strong id="scrFinal" style="color:var(--jade)">0</strong> / 10</div>
         <div style="margin-top:10px;color:var(--gold-dark);font-weight:700" id="scrReward"></div>
         <button class="nav-btn" style="margin-top:16px" onclick="startScramble()">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 🎤 錄音解釋成語 TAB ============ -->
+  <div id="tabVoice" class="tab-content">
+    <div class="quiz-container">
+      <div class="mem-header-row">
+        <div class="match-title">🎤 錄音解釋成語</div>
+        <div class="match-stats">
+          <div class="stat-chip">🎯 <span id="voiceAnswered">0</span> 題</div>
+          <div class="stat-chip">💯 平均 <span id="voiceAvg">—</span></div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:0.88rem;color:var(--ink);opacity:0.75;margin:4px 0 14px">
+        用你自己嘅話解釋成語，AI 老師會即時評分（0-100）· 80+ 分送 🪙 金幣
+      </p>
+
+      <div class="voice-container">
+        <div class="voice-idiom-card">
+          <div class="v-img"><img id="voiceImg" src="" alt=""></div>
+          <div class="v-info">
+            <div class="v-big" id="voiceBig">—</div>
+            <div class="v-pinyin" id="voicePinyin">—</div>
+            <div class="v-pick">
+              <select id="voiceIdiomPick" onchange="loadVoiceIdiom(this.value)">
+                <option value="">⋯ 揀成語 ⋯</option>
+              </select>
+              <button class="nav-btn" style="padding:6px 12px;font-size:0.85rem" onclick="randomVoiceIdiom()">🎲 隨機</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="voice-prompt">
+          <span class="q">❓ 問題：</span>
+          請你用自己嘅說話（粵語）解釋呢個成語嘅意思，可以舉例或用自己遇到嘅情況做例子。
+        </div>
+
+        <div class="voice-input-wrap">
+          <textarea id="voiceText" placeholder="點擊 🎤 開始錄音，或直接打字..."></textarea>
+          <button class="voice-mic-btn" id="voiceMicBtn" onclick="toggleVoiceRecording()" title="點擊錄音">🎤</button>
+        </div>
+
+        <div class="voice-actions">
+          <button class="nav-btn" onclick="submitVoiceExplanation()" id="voiceSubmitBtn">📨 送出評分</button>
+          <button class="nav-btn" onclick="document.getElementById('voiceText').value='';document.getElementById('voiceFeedback').classList.remove('show')" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--ink);border-color:var(--ink)">🗑️ 清除</button>
+        </div>
+
+        <div id="voiceFeedback" class="voice-feedback">
+          <div class="voice-score-big" id="voiceScore">—</div>
+          <div class="voice-fb-text" id="voiceFbText"></div>
+          <div class="voice-tip">💡 想拎高分？多解釋成語嘅意思同字字含義，再舉一個生活例子</div>
+        </div>
+
+        <p style="text-align:center;font-size:0.75rem;color:var(--ink);opacity:0.55;margin-top:16px">
+          🔒 錄音只會暫存喺你部機做辨識，AI 老師只睇文字內容
+        </p>
       </div>
     </div>
   </div>
@@ -1156,6 +1378,172 @@ body::before{
 
 <script>
 // ============================================================
+// SUPABASE (shared with math site)
+// ============================================================
+const SUPABASE_URL = 'https://ygpsvwughqstubwxhzoe.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlncHN2d3VnaHFzdHVid3hoem9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMTM3NzUsImV4cCI6MjA5MTg4OTc3NX0.DBsx2945F0Vdfhptx-Tr9mVqaa2i9jE4tMQIvjffvII';
+const CHAPTER_ID = 9999;  // reserved slot for 中文成語 31-45 (math uses 12, 13, ...)
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// ============================================================
+// STUDENT ROSTER (shared with math site) — last update: 2026-04
+// ============================================================
+const STUDENTS = [{"name":"陳曉樂","class":"5A","number":"01","pwdHash":"5bff797ab1fad63606a44493eafec6459dd49b3fb4d87fdb82429fdc3408129b"},{"name":"陳嘉晴","class":"5A","number":"02","pwdHash":"0839d1e4c6d77aaab9d7a273db53396670d88289c67964090a3bd91caff7753a"},{"name":"陳寶琳","class":"5A","number":"03","pwdHash":"782b3c78b5128f2885ab2f05a94748ab2380478d86db959f747353ecc92cdc2b"},{"name":"池錦明","class":"5A","number":"04","pwdHash":"9d455c9a64d5de26200efe710a771b0bd33fc07111a5f1ec3ed00b5d15f1781b"},{"name":"周靜霏","class":"5A","number":"05","pwdHash":"9f1b235f4f9158b3194b48a24fe92ff73e96d9a89f442500b940b5712f97dfd7"},{"name":"周穎淋","class":"5A","number":"06","pwdHash":"01f8424d1456aa59a94f3b3fcd34b0bb8a3d3dbaa193567a37f2120a5ceef5e0"},{"name":"鍾佩希","class":"5A","number":"07","pwdHash":"65b4ee38488dc435fcdaa001c59aa653ed65676cf53def21df80e24365a167d8"},{"name":"何梓胤","class":"5A","number":"08","pwdHash":"29e7f7acb7d6e18706678535eea71e58967ec77135f278cf5f7133e3aa71100f"},{"name":"葉峻麟","class":"5A","number":"09","pwdHash":"76407cc5620cf9c108619cbe9e9575a5a00805bad04d2fef7889d79d139ba1d2"},{"name":"江栢樂","class":"5A","number":"10","pwdHash":"aa89d8a3383953edf549686270bbb6bbee27cd69c90815fca4c8bd360debeabf"},{"name":"黎駿熙","class":"5A","number":"11","pwdHash":"4fe111a6d821531707aadcadbad679f5e057c15bfe7d34a1829ee74956e7d899"},{"name":"林以勒","class":"5A","number":"12","pwdHash":"d19c3e99d7a79c0f6764039b4890a0985db6e097004f6b8354849c0f76c40dbd"},{"name":"林凱恩","class":"5A","number":"13","pwdHash":"2af1cdf9d9ba8a0d1d14f88a21d6cc2f8e1422ef031f3edd7a4e65221a9b6a35"},{"name":"劉卓恆","class":"5A","number":"14","pwdHash":"7eb5ca2d286e1eb3e7c321e390db41b95365431380b8f1a64e91c9fca2233c78"},{"name":"李沇銒","class":"5A","number":"15","pwdHash":"07dd700ae6d9073a31e8d543363f01d43fd3965e5df8cadd24f6500d8e5fbfe9"},{"name":"李景睿","class":"5A","number":"16","pwdHash":"1f98278699f56b408e96c000bd0a9e6efbd33e0d4fcb123e56ade12f18ad966f"},{"name":"李思澄","class":"5A","number":"17","pwdHash":"499739b2deb0a7174bf48bb7f7afe02377bb8b26dd5582da3dedf7dedb3abe17"},{"name":"李祉瑩","class":"5A","number":"18","pwdHash":"d04e1e8e597af681ec21e478739a1694926702158238ff29b7ff7d210db21ef5"},{"name":"林可欣","class":"5A","number":"19","pwdHash":"d6ba578479ede7cfbea16c3505d3be0dbdd7136e067411505cd85559380b3d8b"},{"name":"劉天翔","class":"5A","number":"20","pwdHash":"054a5f86a5bdcf73d72aacff9c3163b55f5fe6eb3b5ada26344a4eee98e7296a"},{"name":"劉天宇","class":"5A","number":"21","pwdHash":"ac42cc6a0db425aa4dff796a3af3860234192ba9a0c8d762b2ed8ea0b520bd72"},{"name":"馬沁妍","class":"5A","number":"22","pwdHash":"b70763466adf9811a9e84a0fb568e74884c46914ccee5fe467ddeb2a146ddc9f"},{"name":"黃柏揚","class":"5A","number":"23","pwdHash":"ae295b16a5ed33466565626b2db7fb098c508836f701afff7dfb8c6dc8274720"},{"name":"黃賢熙","class":"5A","number":"24","pwdHash":"7f9d5a2984147659be7f9c8a40377b94c06c42c240962c0bdd2a7c1d7663d1ad"},{"name":"葉曉澄","class":"5A","number":"25","pwdHash":"f4e7aa00d090be3187451d8ec666ce83f146799fe353d7945eda8fabff5b4098"},{"name":"朱鋭軒","class":"5A","number":"26","pwdHash":"d6fb9cfda80fdf904007643b2d959ef5aad935bcd909f817a6512ca1787524bd"},{"name":"陳浩輝","class":"5B","number":"01","pwdHash":"b1fcd4fc3fdc8279b23667b76f7509cbbdd16f4da67296552086e884d72f291f"},{"name":"鍾苡淳","class":"5B","number":"02","pwdHash":"43458e283885dbbd64d1a06ab423e4c109715fe9a18409849f0048aba1cef486"},{"name":"樊希瞳","class":"5B","number":"03","pwdHash":"fce36ec99bd49122c97c2cd74f53038b58d351ea49db8b08f0b9ae5ca192029b"},{"name":"霍俊彥","class":"5B","number":"04","pwdHash":"b4618c89362ed54b8c1f1900e6084b6c7fdc173b2bda5bb2eb81e8e367286d7a"},{"name":"賴頌恩","class":"5B","number":"05","pwdHash":"509d329f8415e5682af9bed8d7b312056a50755ca5a9c7a1cf516edc04d08df8"},{"name":"劉梓婷","class":"5B","number":"06","pwdHash":"f3c0ede0690e009feeb2df5f8247d4872dd74fdd788003e723bd8398b4672bca"},{"name":"劉煒諾","class":"5B","number":"07","pwdHash":"fee95d67e174a152920bfeac138a03ee41d8fd32cfc191476d7c838bced69739"},{"name":"李紫曈","class":"5B","number":"08","pwdHash":"bd75b36042f6cb91230941c5ab53ed9e980ca9f554757ad8a045b91e73226732"},{"name":"梁凱俊","class":"5B","number":"09","pwdHash":"eb1ed985841db3ff97993da1d9dbd6ace4f744b14385765caed35c7576796555"},{"name":"梁諾軒","class":"5B","number":"10","pwdHash":"cc2c310036d09b07aff5d48b6da0712b41646a9d79bf0a39d628c7b05b4234a5"},{"name":"李凱玲","class":"5B","number":"11","pwdHash":"cf57a4ebdb3c941fec0a29ab9fb35b02dff472e9320cfc9ea2ed5b21223cf9d9"},{"name":"廖崴勇","class":"5B","number":"12","pwdHash":"d987f2ffc24cfc5a48364aa38ea1fb93f9e10457655c332a6c6c8f7e2defc255"},{"name":"麥紫盈","class":"5B","number":"13","pwdHash":"b291e6e3bf381f58d5886f3fe9ebc01f235d7f0fd0a7e48172b5241cdbf8945d"},{"name":"莫雨辰","class":"5B","number":"14","pwdHash":"34ef549f3b8fa5aa9b13107a0a8ecabf9591c9f227cc3e9835febf3485ae7fc7"},{"name":"夏明","class":"5B","number":"15","pwdHash":"d0ac4db195c066dcbcebc2649986d270f098b1df0cbc7bdc09ff9786fe0f94f3"},{"name":"田萱","class":"5B","number":"16","pwdHash":"de0a70374714b0eb9bb92dac3af5e16e30a578bd8b6de3448df49c0c1450105c"},{"name":"魏艾倫","class":"5B","number":"17","pwdHash":"059934d506c3d1db597950f91f53f2c230118ec4f50fce913d51e805d9b53316"},{"name":"葉芷芊","class":"5B","number":"18","pwdHash":"f184bcee9bb1b97ec0c4ef6b5eaf0f5a84f3bb0fc977517d388dd5d213f32c3f"},{"name":"楊紫悠","class":"5B","number":"19","pwdHash":"077bbe2cb57387326c500ab5f84239a186441fa75cca6cb3cd9f588e55699185"},{"name":"周志荣","class":"5B","number":"20","pwdHash":"ebc11e697c2b5b56df27e2c5bf36408b513db6da4701bb61837477f6fdb6ed09"},{"name":"黎振希","class":"5B","number":"21","pwdHash":"f9ae42f73d98ecacd2b0d37ac8a2d2fe92e30e371750719d687220ab257eb80a"},{"name":"曹恒銘","class":"5C","number":"01","pwdHash":"93698bd7177b8c4f573063bd00faf823692667d0eabd811549839ac001643706"},{"name":"陳誠泓","class":"5C","number":"02","pwdHash":"22be550ffdfaead128c1631600653f7ebf0126afe710b850582f3ceaff2bd6b8"},{"name":"鄭芷渝","class":"5C","number":"03","pwdHash":"25d5482b5ad7976ed3d9200f088ac0d0b1529aea6e6db63d63c03ad1d01118da"},{"name":"張晞朗","class":"5C","number":"04","pwdHash":"c28e284f63b2f822b62ee011a9fc2e2a35ad95ac7d333d83cfc3642f38f9ee99"},{"name":"張瀚陽","class":"5C","number":"05","pwdHash":"0084d970c44712ab3f84a5ae7d4c9439cd97b636bcf85b11b1484e6cbd2df1d4"},{"name":"張詠渝","class":"5C","number":"06","pwdHash":"5083a6a5a7429d9e403dda7a33995d71532b98d84a1763b87fc457ad7fe5ba65"},{"name":"周浚鈮","class":"5C","number":"07","pwdHash":"e7be4f88b98e7a13674856f62e00c27502229f818a44da85637776a6c6ecd2b5"},{"name":"朱逸僑","class":"5C","number":"08","pwdHash":"c768cd9e57bdc96d822c1e9b803211bf842d0ec3ba639774ee7d64f60cf68879"},{"name":"崔晉毅","class":"5C","number":"09","pwdHash":"e5740c808ff20a1bf539ce9dfce5e434582f2825501370923acf8f5e31fe860d"},{"name":"郭巧盈","class":"5C","number":"10","pwdHash":"255df8e7d2b8bdc4134d37cd1d0c0f3d8ad5e6178cb7badb7c1de581092568fa"},{"name":"黎曜滺","class":"5C","number":"11","pwdHash":"fce7d8f24c768d5c96579fcff76096c84a3a27c72e1dffae52fc1deac2be5627"},{"name":"林爾菲","class":"5C","number":"12","pwdHash":"ec144701ec50daed8316f192366a278d7bbafc89ee1976f8cc3b052971596944"},{"name":"羅毅喬","class":"5C","number":"13","pwdHash":"2c27c7288f70c082a116a56653897bc72c0030b33509724922a5a9b163cb5e46"},{"name":"李博燊","class":"5C","number":"14","pwdHash":"7ba146c8433af4693f865205a0c48aa1285c581d4b3402ae59af57094b4c0e9a"},{"name":"李瀚澄","class":"5C","number":"15","pwdHash":"2257868505ee83827987c7428cc7d9d986e21def227496bcba1a465f2a76c970"},{"name":"劉芷菡","class":"5C","number":"16","pwdHash":"5ef7916c97a33a3cbd770f8f50d155301f939fe0814cfb5902499fcd976d2901"},{"name":"文樂穎","class":"5C","number":"17","pwdHash":"0abe7569ba6fdb20236f042b48be15699f3e40b2de4917a1995a7554e3cd2d2a"},{"name":"莫睿熙","class":"5C","number":"18","pwdHash":"7887edafa1eb72cecf76bd70c7dfc4ad8c0d3a299328cc7e7687982522ec481c"},{"name":"吳奕熹","class":"5C","number":"19","pwdHash":"08df5d355793b8a1cb68f5ed5f777f4bcef739ad9410b342ea54bc23354e136e"},{"name":"吳蕊詩","class":"5C","number":"20","pwdHash":"59392d501ffa63a2f82c53c4975a1d319a889c1c58e172ea4366aaeaa714c316"},{"name":"鄧舒庭","class":"5C","number":"21","pwdHash":"d63f66d81e89b749b9a26d67616664543022675c7e9057a7e2b336e0896cc92c"},{"name":"曾浚鎬","class":"5C","number":"22","pwdHash":"cf558350059624fc5950b9e083f98968252efbbbf0bc58f257e7efb0eafc7910"},{"name":"曾穎芯","class":"5C","number":"23","pwdHash":"51093d22057b95450d51d5c527dc9db90f2216e38950c664389f200b35f05c25"},{"name":"王芷恩","class":"5C","number":"24","pwdHash":"7900099423109c3c796371644e03cafb7f9091d4b7f18fd69c45e53893dfa9af"},{"name":"黃靖宸","class":"5C","number":"25","pwdHash":"0b37e26c39921e1df57f77da6870c34103ab15c1c4e608015b4aa4216c639615"},{"name":"黃熙俊","class":"5C","number":"26","pwdHash":"6ffaadd03b9dffba8f1fe4b744584827b219c9ef983da2ca955f6bb6a255f844"},{"name":"楊程善","class":"5C","number":"27","pwdHash":"f97ca319ce607b4aad020f1704a97e5b8efaea2634e25a64a76999fc53329327"},{"name":"張芸菲","class":"5C","number":"28","pwdHash":"96a1a6873507318225c63cf11028dc5ff9270cd0c581cdc56828b8836cf1b58f"},{"name":"夏芊雯","class":"5D","number":"01","pwdHash":"fef080d6da2a276aeaa7b6a3ade8c5f5ec1dea0e9319cefd589900aacd6c5e72"},{"name":"AYESHA NOOR","class":"5D","number":"02","pwdHash":"ef196422411cc5db289bd7a192b12d2fd0d6437365d1839a572c79e641861e4a"},{"name":"陳俊杰","class":"5D","number":"03","pwdHash":"0f19cb7c5022613cb175469d978f2fedd26866c6df4fa6be440e016ffa04cd34"},{"name":"陳皙羽","class":"5D","number":"04","pwdHash":"399e94abf41b446d7ac3a98a6a6e787ae1d7e0eaa40da86510cfd9f88d1b1242"},{"name":"陳思穎","class":"5D","number":"05","pwdHash":"68b459665824ea318b62a7437402809d08ee7bcbcb6c3ac9d6128a8476165cfd"},{"name":"陳嘉燿","class":"5D","number":"06","pwdHash":"c3d76407907ecaa72edb4b1f6b6088e7b92cb529625ecae5e7731265f8894fdc"},{"name":"錢伊婷","class":"5D","number":"07","pwdHash":"5c512c5c8d38b866493840d8971db7061bbb060604821236629529fe6982dc3a"},{"name":"馬文利","class":"5D","number":"08","pwdHash":"fcf516620f5843e9eb1ffbdc6fcc57bc1c9f27dabf0350ffb565a0a7a2d05d31"},{"name":"候伯仲","class":"5D","number":"09","pwdHash":"3228be0a597502c728d7f1cdaa63d9a6c964f60089f07fe1ce364753805da73b"},{"name":"黃争苗","class":"5D","number":"10","pwdHash":"6e3791ac3c3f95bca48e1ca04e81696d1e8c5d2011740880a365f4f21021acc4"},{"name":"羅宇航","class":"5D","number":"11","pwdHash":"84e033f04115cb9ca6089a42f0d451a38b0c20ddffd776bfa9a5475f54a39890"},{"name":"藍一峰","class":"5D","number":"12","pwdHash":"eb17815fd683f15c889d46b04b2dbaafb0b95f5cd7ed36cf3867420dae708197"},{"name":"劉芍盈","class":"5D","number":"13","pwdHash":"63adac4a13ba1a7731832140e88f3afc18f57e22080520e502ca7ebf5e06be6f"},{"name":"劉咏艷","class":"5D","number":"14","pwdHash":"d2d1e9cd3fd801af164e75c8e270a851f6fbb9d3f3da40c62b0647c44cb94832"},{"name":"李騰俊","class":"5D","number":"15","pwdHash":"f6bb67ecdeed65a1e6ef32f93f6623a33487f17035d5b09276a88930f72732b2"},{"name":"吳卓軒","class":"5D","number":"16","pwdHash":"6563dd5ccfda5ac425821907eae5d8532136a15ed77700e40c4d136ba6d4752a"},{"name":"伍嘉琪","class":"5D","number":"17","pwdHash":"0deb8c05b8254176caa91816dfe3042382cfe6aaa41f56a66405d4c59c33b297"},{"name":"彭俊龍","class":"5D","number":"18","pwdHash":"95ea10a78ae26bf56012be0c16661d0fe5e3b309a28fb50a4551d58459261a37"},{"name":"貝文俊","class":"5D","number":"19","pwdHash":"a4e1be826c2b55502a6648e515ad3640ec65dbadf6023296f5586ce49102409d"},{"name":"黃梓晉","class":"5D","number":"20","pwdHash":"175266cffc06992b4a061acc5a75144f87db99b33e384db6b0e6409b9d594309"},{"name":"測試1","class":"7A","number":"01"},{"name":"測試2","class":"7A","number":"02"},{"name":"測試3","class":"7A","number":"03"},{"name":"測試4","class":"7A","number":"04"},{"name":"測試5","class":"7A","number":"05"},{"name":"測試6","class":"7A","number":"06"},{"name":"測試7","class":"7A","number":"07"},{"name":"測試8","class":"7A","number":"08"},{"name":"測試9","class":"7A","number":"09"},{"name":"測試10","class":"7A","number":"10"},{"name":"測試學生甲","class":"5F","number":"01","pwdHash":"6d1cfbaa9dc512b43615209d0b79c86f53c63859a599d99ec398b0bc544dc92f"},{"name":"測試學生乙","class":"5F","number":"02","pwdHash":"fbb5f3d8b5f281ddeda6824442739ce3819cfa4d36ec9221f1bab3f873e8f087"},{"name":"測試學生丙","class":"5F","number":"03","pwdHash":"7ad014db3d9c515a1753f0282b7c6dfd211c51bfb49bc701c177f38b8446a5ea"},{"name":"測試學生丁","class":"5F","number":"04","pwdHash":"534440136678b107e8606c37e61991ac5e986bb24624e595b7834d0821ef1809"},{"name":"測試學生戊","class":"5F","number":"05","pwdHash":"e8b4892de4309b6a7cb88509515eb87fa555a05b6752ead8fc8a5f5f6f0a000d"}];
+
+// ============================================================
+// AUTH
+// ============================================================
+let currentUser = null;
+const AUTH_KEY = 'lwwf_auth_user';
+
+async function hashPassword(pwd, cls, num){
+  const salt = `lwwf_${cls}_${num}`;
+  const data = new TextEncoder().encode(salt + pwd + salt);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function switchLoginTab(t){
+  document.querySelectorAll('.login-tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+  if(t === 'student'){
+    document.querySelectorAll('.login-tab')[0].classList.add('active');
+    document.getElementById('studentLoginForm').classList.add('active');
+  } else {
+    document.querySelectorAll('.login-tab')[1].classList.add('active');
+    document.getElementById('teacherLoginForm').classList.add('active');
+  }
+}
+
+function updateStudentList(){
+  const cls = document.getElementById('classSelect').value;
+  const sel = document.getElementById('studentSelect');
+  sel.innerHTML = '';
+  if(!cls){ sel.innerHTML = '<option value="">請先選擇班別</option>'; sel.disabled = true; return; }
+  sel.disabled = false;
+  sel.innerHTML = '<option value="">請選擇學號</option>';
+  STUDENTS.filter(s => s.class === cls).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.number;
+    opt.textContent = `${s.number} - ${s.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+async function studentLogin(){
+  const cls = document.getElementById('classSelect').value;
+  const num = document.getElementById('studentSelect').value;
+  const pwd = document.getElementById('studentPassword').value.trim();
+  const err = document.getElementById('studentLoginError');
+  if(!cls || !num){ err.textContent = '請選擇班別和學號'; err.classList.add('show'); return; }
+  const student = STUDENTS.find(s => s.class === cls && s.number === num);
+  if(!student){ err.textContent = '揾唔到學生紀錄'; err.classList.add('show'); return; }
+  if(student.pwdHash){
+    const inputHash = await hashPassword(pwd, cls, num);
+    if(inputHash !== student.pwdHash){
+      err.textContent = '密碼錯誤，請重新輸入（提示：lst 後的 5 位數字）';
+      err.classList.add('show');
+      return;
+    }
+  }
+  err.classList.remove('show');
+  currentUser = {...student, role: 'student'};
+  persistAuth();
+  await onLoginSuccess();
+}
+
+function teacherLogin(){
+  const pwd = document.getElementById('teacherPassword').value;
+  const err = document.getElementById('teacherLoginError');
+  if(pwd === 'lstlwwf'){
+    err.classList.remove('show');
+    currentUser = {role: 'teacher', name: '教師'};
+    persistAuth();
+    onLoginSuccess();
+  } else {
+    err.classList.add('show');
+  }
+}
+
+function persistAuth(){
+  try { localStorage.setItem(AUTH_KEY, JSON.stringify(currentUser)); } catch(e){}
+}
+function clearAuthPersist(){
+  try { localStorage.removeItem(AUTH_KEY); } catch(e){}
+}
+function loadAuthFromStorage(){
+  try {
+    const raw = localStorage.getItem(AUTH_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e){ return null; }
+}
+
+async function onLoginSuccess(){
+  document.getElementById('loginOverlay').classList.remove('active');
+  const badge = document.getElementById('userBadge');
+  const nameEl = document.getElementById('userName');
+  if(currentUser.role === 'student'){
+    nameEl.textContent = `${currentUser.class} · ${currentUser.number} · ${currentUser.name}`;
+  } else {
+    nameEl.textContent = '👩‍🏫 教師';
+  }
+  badge.style.display = '';
+  // Fetch cloud-stored progress for this student
+  await loadCloudProgress();
+}
+
+function logout(){
+  if(!confirm('確定要登出？')) return;
+  currentUser = null;
+  clearAuthPersist();
+  document.getElementById('userBadge').style.display = 'none';
+  document.getElementById('loginOverlay').classList.add('active');
+  switchLoginTab('student');
+}
+
+// ============================================================
+// CLOUD STORE (Supabase progress sync)
+// ============================================================
+async function saveCloudProgress(){
+  if(!currentUser || currentUser.role !== 'student' || !sb) return;
+  const {class: cls, number: num} = currentUser;
+  try {
+    await sb.from('student_scores').upsert({
+      class: cls, student_number: num, chapter: CHAPTER_ID,
+      activity_key: 'idioms_progress',
+      data: { coins, stars: [...starsEarned] }
+    }, { onConflict: 'class,student_number,chapter,activity_key' });
+  } catch(e){ console.warn('cloud save failed', e); }
+}
+async function saveCloudActivity(activityKey, data){
+  if(!currentUser || currentUser.role !== 'student' || !sb) return;
+  try {
+    await sb.from('student_scores').upsert({
+      class: currentUser.class, student_number: currentUser.number,
+      chapter: CHAPTER_ID, activity_key: activityKey, data
+    }, { onConflict: 'class,student_number,chapter,activity_key' });
+  } catch(e){ console.warn('cloud save activity failed', e); }
+}
+async function loadCloudProgress(){
+  if(!currentUser || currentUser.role !== 'student' || !sb) return;
+  const {class: cls, number: num} = currentUser;
+  try {
+    const { data } = await sb.from('student_scores')
+      .select('activity_key,data')
+      .eq('class', cls).eq('student_number', num).eq('chapter', CHAPTER_ID)
+      .eq('activity_key', 'idioms_progress');
+    if(data && data.length > 0){
+      const d = data[0].data;
+      if(d.coins > coins) coins = d.coins;
+      (d.stars || []).forEach(s => starsEarned.add(s));
+      saveProgress();
+      updateTopbar();
+    }
+  } catch(e){ console.warn('cloud load failed', e); }
+}
+
+// ============================================================
 // DATA LOADING
 // ============================================================
 let IDIOMS = [];
@@ -1185,7 +1573,12 @@ function updateTopbar(){
   document.getElementById('coinCount').textContent = coins;
   document.getElementById('starCount').textContent = starsEarned.size;
 }
-function addCoins(n){coins += n; saveProgress(); updateTopbar();}
+let _cloudSaveTimer = null;
+function scheduleCloudSave(){
+  if(_cloudSaveTimer) clearTimeout(_cloudSaveTimer);
+  _cloudSaveTimer = setTimeout(() => saveCloudProgress(), 2000);
+}
+function addCoins(n){coins += n; saveProgress(); updateTopbar(); scheduleCloudSave();}
 function markStar(id){
   if(!starsEarned.has(id)){
     starsEarned.add(id);
@@ -1210,6 +1603,7 @@ document.querySelectorAll('.nav-tab').forEach(btn => {
     if(tab === 'memory') startMemory();
     if(tab === 'sort') startSort();
     if(tab === 'scramble') startScramble();
+    if(tab === 'voice') initVoiceTab();
   });
 });
 
@@ -1940,6 +2334,219 @@ function finishScr(){
 }
 
 // ============================================================
+// 🎤 VOICE EXPLAIN (AI grading via Cloudflare Worker)
+// ============================================================
+const WORKER_URL = 'https://lwwf-math-ai.lwwfaiteams.workers.dev';
+let voiceRecog = null;
+let voiceIsRecording = false;
+let voiceCurrentIdiom = null;
+let voiceStats = { total: 0, sum: 0 };
+
+function initVoiceTab(){
+  const pick = document.getElementById('voiceIdiomPick');
+  if(pick.options.length <= 1){
+    IDIOMS.forEach(idm => {
+      const opt = document.createElement('option');
+      opt.value = idm.id;
+      opt.textContent = `#${idm.id} · ${idm.text}`;
+      pick.appendChild(opt);
+    });
+  }
+  if(!voiceCurrentIdiom) randomVoiceIdiom();
+  // restore stats from local
+  try {
+    const s = JSON.parse(localStorage.getItem('p5_voice_stats') || '{}');
+    voiceStats = { total: s.total || 0, sum: s.sum || 0 };
+    updateVoiceStats();
+  } catch(e){}
+}
+function updateVoiceStats(){
+  document.getElementById('voiceAnswered').textContent = voiceStats.total;
+  document.getElementById('voiceAvg').textContent = voiceStats.total
+    ? Math.round(voiceStats.sum / voiceStats.total) : '—';
+}
+
+function loadVoiceIdiom(id){
+  if(!id) return;
+  const idm = IDIOMS.find(i => i.id === parseInt(id));
+  if(!idm) return;
+  voiceCurrentIdiom = idm;
+  document.getElementById('voiceBig').textContent = idm.text;
+  document.getElementById('voiceBig').style.color = idm.color || 'var(--red-dark)';
+  document.getElementById('voicePinyin').textContent = idm.pinyin;
+  document.getElementById('voiceImg').src = `assets/ch_idioms/new_tiles/idiom_${idm.id}.jpg`;
+  document.getElementById('voiceText').value = '';
+  document.getElementById('voiceFeedback').classList.remove('show');
+  document.getElementById('voiceIdiomPick').value = idm.id;
+}
+
+function randomVoiceIdiom(){
+  const idm = IDIOMS[Math.floor(Math.random() * IDIOMS.length)];
+  loadVoiceIdiom(idm.id);
+}
+
+function initVoiceSpeechRecog(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+  const r = new SR();
+  r.lang = 'yue-Hant-HK';
+  r.continuous = true;
+  r.interimResults = true;
+  r.maxAlternatives = 1;
+  return r;
+}
+
+function toggleVoiceRecording(){
+  if(!voiceRecog){
+    voiceRecog = initVoiceSpeechRecog();
+    if(!voiceRecog){
+      alert('你個瀏覽器唔支援錄音辨識 · 請用 Chrome / Edge / Safari 打開 🙏');
+      return;
+    }
+    voiceRecog.onresult = (e) => {
+      let t = '';
+      for(let i = 0; i < e.results.length; i++){
+        t += e.results[i][0].transcript;
+      }
+      document.getElementById('voiceText').value = t;
+    };
+    voiceRecog.onerror = (e) => {
+      console.warn('voice recog error:', e.error);
+      stopVoiceRecording();
+      if(e.error === 'not-allowed') alert('請允許麥克風權限 🎤');
+      else if(e.error === 'language-not-supported') voiceRecog.lang = 'zh-HK';
+    };
+    voiceRecog.onend = () => stopVoiceRecording();
+  }
+  if(voiceIsRecording){
+    voiceRecog.stop();
+  } else {
+    try {
+      voiceRecog.start();
+      voiceIsRecording = true;
+      document.getElementById('voiceMicBtn').classList.add('recording');
+      document.getElementById('voiceText').placeholder = '🎤 錄音中... 講完再㩒一次停';
+    } catch(e){ console.warn(e); }
+  }
+}
+
+function stopVoiceRecording(){
+  voiceIsRecording = false;
+  document.getElementById('voiceMicBtn').classList.remove('recording');
+  document.getElementById('voiceText').placeholder = '點擊 🎤 開始錄音，或直接打字...';
+}
+
+async function submitVoiceExplanation(){
+  const idm = voiceCurrentIdiom;
+  if(!idm){ alert('請先揀一個成語'); return; }
+  const text = document.getElementById('voiceText').value.trim();
+  if(text.length < 6){
+    showVoiceFeedback(0, '❌ 講多幾句啦！請完整解釋成語嘅意思（至少 6 個字）');
+    return;
+  }
+  // Anti-fabrication: check Chinese char count + repetition
+  const chineseChars = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+  if(chineseChars < 3){
+    showVoiceFeedback(0, '❌ 請用中文解釋成語意思');
+    return;
+  }
+  const uniq = new Set(text.replace(/\s/g,'')).size;
+  if(text.length >= 5 && uniq <= 2){
+    showVoiceFeedback(0, '❌ 唔好亂講，認真解釋成語意思 🙏');
+    return;
+  }
+
+  const btn = document.getElementById('voiceSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ AI 老師評分中...';
+
+  try {
+    const prompt = `你係「成語小老師」，負責評核小五學生對成語嘅解釋係咪正確。
+
+成語：${idm.text}
+正確意思：${idm.meaning}
+課本例句：${idm.example}
+字字拆解：${idm.characters.map(c => `${c.char}=${c.meaning}`).join('；')}
+主題：${idm.theme}
+
+學生嘅粵語解釋：「${text}」
+
+請只返回一行 JSON，格式：{"score":0-100整數,"feedback":"2-3 句鼓勵性評語"}
+評分準則：
+- 85-100：完整捕捉成語意思、用字精確、有舉例
+- 65-84：大致正確但有少量疏漏或唔夠具體
+- 40-64：部分理解但有明顯錯誤或遺漏
+- 1-39：理解錯誤、離題、或明顯敷衍
+- 0：與題目無關 / 亂打 / 只係重複成語字
+
+feedback 要用繁體中文，鼓勵語氣，指出講得好嘅地方 + 1 個可補充嘅地方。唔好超過 80 字。
+
+只返回 JSON，無任何其他文字。`;
+
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemPrompt: '你係一位嚴謹但鼓勵嘅中文科 AI 老師，專門評核小學生嘅成語解釋。必須只返回 JSON。',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok){ throw new Error(data.message || 'API_ERROR'); }
+
+    const reply = (data.reply || '').trim();
+    // Extract JSON from reply
+    const m = reply.match(/\{[\s\S]*?\}/);
+    if(!m){ throw new Error('PARSE_ERROR'); }
+    const parsed = JSON.parse(m[0]);
+    const score = Math.max(0, Math.min(100, parseInt(parsed.score) || 0));
+    const feedback = parsed.feedback || '好嘗試！';
+    showVoiceFeedback(score, feedback);
+
+    // Stats
+    voiceStats.total++;
+    voiceStats.sum += score;
+    try { localStorage.setItem('p5_voice_stats', JSON.stringify(voiceStats)); } catch(e){}
+    updateVoiceStats();
+
+    // Coin reward: 1 coin per 20 score → 80+ = 4 coins, perfect 100 = 5 coins
+    const reward = Math.floor(score / 20);
+    if(reward > 0){
+      addCoins(reward);
+      markStar(idm.id);
+    }
+
+    // Save attempt to cloud
+    saveCloudActivity(`voice_idiom_${idm.id}`, { score, feedback, text, ts: Date.now() });
+
+  } catch(err){
+    console.error('voice grading failed:', err);
+    showVoiceFeedback(null, '⚠️ AI 老師暫時未能回應，請稍後再試。\n' + (err.message || ''));
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📨 送出評分';
+  }
+}
+
+function showVoiceFeedback(score, fb){
+  const box = document.getElementById('voiceFeedback');
+  const scoreEl = document.getElementById('voiceScore');
+  const fbEl = document.getElementById('voiceFbText');
+  box.classList.add('show');
+  if(score === null){
+    scoreEl.textContent = '⚠️';
+    scoreEl.classList.add('low');
+    box.classList.add('wrong');
+  } else {
+    scoreEl.textContent = score + ' 分';
+    const low = score < 60;
+    scoreEl.classList.toggle('low', low);
+    box.classList.toggle('wrong', low);
+  }
+  fbEl.textContent = fb;
+}
+
+// ============================================================
 // QUIZ
 // ============================================================
 let quizAnswers = {};
@@ -2246,19 +2853,37 @@ function checkExtraAssets(){
 // ============================================================
 // INIT
 // ============================================================
-fetch('data/idioms.json')
-  .then(r => r.json())
-  .then(data => {
+(async function init(){
+  // 1. Auth gate
+  const saved = loadAuthFromStorage();
+  if(saved){
+    currentUser = saved;
+    document.getElementById('loginOverlay').classList.remove('active');
+    const badge = document.getElementById('userBadge');
+    const nameEl = document.getElementById('userName');
+    nameEl.textContent = currentUser.role === 'teacher'
+      ? '👩‍🏫 教師'
+      : `${currentUser.class} · ${currentUser.number} · ${currentUser.name}`;
+    badge.style.display = '';
+  } else {
+    document.getElementById('loginOverlay').classList.add('active');
+  }
+
+  // 2. Load idioms
+  try {
+    const data = await (await fetch('data/idioms.json')).json();
     IDIOMS = data.idioms;
     loadProgress();
     renderIndex();
-    // 自學教材 is the default tab — init its content immediately
     checkExtraAssets();
-  })
-  .catch(err => {
+    if(currentUser && currentUser.role === 'student'){
+      await loadCloudProgress();
+    }
+  } catch(err){
     console.error('Failed to load idioms:', err);
-    document.getElementById('idiomIndex').innerHTML = '<p style="grid-column:1/-1;padding:40px;text-align:center;color:red">載入失敗，請用 HTTP 伺服器打開：<br><code>python -m http.server</code></p>';
-  });
+    document.getElementById('idiomIndex').innerHTML = '<p style="grid-column:1/-1;padding:40px;text-align:center;color:red">載入失敗，請用 HTTP 伺服器打開：<br><code>npx http-server</code></p>';
+  }
+})();
 
 // Load voices (some browsers need this)
 if('speechSynthesis' in window){
