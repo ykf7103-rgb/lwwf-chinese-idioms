@@ -1,0 +1,395 @@
+{
+  "title": "Idiom Quiz",
+  "questions": [
+    {
+      "question": "The audience was stunned when the magician pulled a live rabbit out of a silk scarf, and Ming stood up shouting 'Excellent!' in excitement. Which idiom best describes the audience's reaction to this amazing performance?",
+      "answerOptions": [
+        {
+          "text": "拍案叫絕",
+          "isCorrect": true,
+          "rationale": "This idiom literally means to slap the table and shout in praise, used when one is extremely impressed or appreciative of something excellent."
+        },
+        {
+          "text": "眾目睽睽",
+          "isCorrect": false,
+          "rationale": "This describes a situation where many people are watching closely, but it does not convey the feeling of praise or admiration."
+        },
+        {
+          "text": "不屑一顧",
+          "isCorrect": false,
+          "rationale": "This is the opposite of the correct answer, as it implies looking down on something or finding it unworthy of attention."
+        },
+        {
+          "text": "惟妙惟肖",
+          "isCorrect": false,
+          "rationale": "While the performance was good, this idiom is specifically used to describe how lifelike or realistic a portrayal or imitation is."
+        }
+      ],
+      "hint": "Think about the physical action of slapping a table while shouting for something 'absolute' or 'perfect'."
+    },
+    {
+      "question": "Hau Yan drew a cartoon portrait of her teacher. The drawing was so detailed that it captured the teacher's smile and even her earrings perfectly. Which idiom describes how realistic the drawing was?",
+      "answerOptions": [
+        {
+          "text": "畫蛇添足",
+          "isCorrect": false,
+          "rationale": "This refers to ruining something by adding unnecessary details, whereas the student's drawing was successful and accurate."
+        },
+        {
+          "text": "惟妙惟肖",
+          "isCorrect": true,
+          "rationale": "This idiom is used to describe a depiction or imitation that is incredibly lifelike and matches the original perfectly."
+        },
+        {
+          "text": "不倫不類",
+          "isCorrect": false,
+          "rationale": "This term describes something that is neither one thing nor another, often used for poor imitations that fail to look right."
+        },
+        {
+          "text": "層出不窮",
+          "isCorrect": false,
+          "rationale": "This describes things appearing one after another, which does not relate to the quality of a single drawing."
+        }
+      ],
+      "hint": "Focus on an idiom that means 'only this is wonderful and only this is similar'."
+    },
+    {
+      "question": "In the pasture, a mother cow licks her newborn calf to show her love. This scene reminds Ming of how his father picks him up from school every day, rain or shine. What idiom captures this deep parental love?",
+      "answerOptions": [
+        {
+          "text": "大義滅親",
+          "isCorrect": false,
+          "rationale": "This refers to prioritizing justice over family ties, which is the opposite of the protective parental love described."
+        },
+        {
+          "text": "鐵石心腸",
+          "isCorrect": false,
+          "rationale": "This describes a person who is cold and unfeeling, lacking the warmth shown by the father and the cow."
+        },
+        {
+          "text": "舐犢情深",
+          "isCorrect": true,
+          "rationale": "This idiom uses the image of an old cow licking its calf to symbolize the deep affection parents have for their children."
+        },
+        {
+          "text": "相得益彰",
+          "isCorrect": false,
+          "rationale": "This refers to two things complementing each other well, rather than the specific bond between parent and child."
+        }
+      ],
+      "hint": "Look for an idiom that mentions 'licking' and a 'calf'."
+    },
+    {
+      "question": "Ming's brother stayed up all night reading comics, neglecting his health. His father warned him to stop immediately before it was too late. Which idiom describes stopping a dangerous behavior just in time?",
+      "answerOptions": [
+        {
+          "text": "執迷不悟",
+          "isCorrect": false,
+          "rationale": "This describes someone who refuses to wake up to their mistakes, which is what the brother is being warned *not* to do."
+        },
+        {
+          "text": "一意孤行",
+          "isCorrect": false,
+          "rationale": "This means to persist in one's own way regardless of advice, rather than stopping a dangerous action."
+        },
+        {
+          "text": "臨崖勒馬",
+          "isCorrect": true,
+          "rationale": "This metaphor describes pulling back the reins of a horse at the edge of a cliff, signifying a timely realization and cessation of danger."
+        },
+        {
+          "text": "如虎添翼",
+          "isCorrect": false,
+          "rationale": "This idiom refers to a strong person becoming stronger, which does not fit a context of warning or danger."
+        }
+      ],
+      "hint": "Think of an animal being stopped at the edge of a steep drop-off."
+    },
+    {
+      "question": "A man rudely jumped to the front of a long line at the MTR station while dozens of angry people watched him. Which idiom describes doing something in plain view of everyone?",
+      "answerOptions": [
+        {
+          "text": "無人知曉",
+          "isCorrect": false,
+          "rationale": "This means 'nobody knows,' which contradicts the fact that there was a long line of people watching."
+        },
+        {
+          "text": "眾目睽睽",
+          "isCorrect": true,
+          "rationale": "This idiom describes a situation where many eyes are wide open and staring, often used when something shameful happens in public."
+        },
+        {
+          "text": "暗中進行",
+          "isCorrect": false,
+          "rationale": "This suggests doing something in secret or in the dark, but the man was acting openly at the station."
+        },
+        {
+          "text": "以訛傳訛",
+          "isCorrect": false,
+          "rationale": "This refers to the spread of false information, not the act of being watched by a crowd."
+        }
+      ],
+      "hint": "Focus on the phrase that mentions 'many eyes' staring."
+    },
+    {
+      "question": "Siu Wah tried to use a special 3D painting technique to make her Mother's Day gift look better, but she added too many layers and ended up ruining the whole picture. This is an example of which idiom?",
+      "answerOptions": [
+        {
+          "text": "恰到好處",
+          "isCorrect": false,
+          "rationale": "This means 'just right,' but Siu Wah's attempt actually made the situation worse."
+        },
+        {
+          "text": "錦上添花",
+          "isCorrect": false,
+          "rationale": "This means adding beauty to something already good, which is the opposite of ruining a painting by over-trying."
+        },
+        {
+          "text": "弄巧反拙",
+          "isCorrect": true,
+          "rationale": "This idiom describes an attempt to be clever or skillful that results in a clumsy or failed outcome."
+        },
+        {
+          "text": "未雨綢繆",
+          "isCorrect": false,
+          "rationale": "This refers to preparing for the future, not a failed attempt at a artistic technique."
+        }
+      ],
+      "hint": "Think of a word that means trying to be 'clever' but ending up 'clumsy'."
+    },
+    {
+      "question": "The piano's clear notes and the violin's emotional melody blended perfectly together, making the music even more beautiful than when played alone. Which idiom describes this mutual improvement?",
+      "answerOptions": [
+        {
+          "text": "兩敗俱傷",
+          "isCorrect": false,
+          "rationale": "This means both sides suffer harm, which is the opposite of the harmony found in the musical duet."
+        },
+        {
+          "text": "格格不入",
+          "isCorrect": false,
+          "rationale": "This describes things that do not fit together at all, whereas the instruments blended perfectly."
+        },
+        {
+          "text": "相得益彰",
+          "isCorrect": true,
+          "rationale": "This idiom describes how two things or people bring out the best in each other when combined."
+        },
+        {
+          "text": "大言不慚",
+          "isCorrect": false,
+          "rationale": "This refers to shameless boasting and has nothing to do with musical harmony or cooperation."
+        }
+      ],
+      "hint": "Focus on the idea of two things 'obtaining' benefit and becoming more 'prominent'."
+    },
+    {
+      "question": "Hiu Kwong, who gets out of breath just climbing stairs, told everyone he would definitely win the gold medal at the sports meet. Which idiom describes his shameless boasting?",
+      "answerOptions": [
+        {
+          "text": "謙虛謹慎",
+          "isCorrect": false,
+          "rationale": "This means being humble and cautious, which is the exact opposite of Hiu Kwong's behavior."
+        },
+        {
+          "text": "大言不慚",
+          "isCorrect": true,
+          "rationale": "This describes someone who makes grand, exaggerated claims without feeling any shame or embarrassment."
+        },
+        {
+          "text": "實事求是",
+          "isCorrect": false,
+          "rationale": "This refers to seeking the truth from facts, while Hiu Kwong was ignoring the fact that he was unfit."
+        },
+        {
+          "text": "拍案叫絕",
+          "isCorrect": false,
+          "rationale": "This is used for praising someone else's performance, not for one's own self-praise."
+        }
+      ],
+      "hint": "The idiom literally translates to 'big words' and 'not ashamed'."
+    },
+    {
+      "question": "A student was alone in the classroom when a theft occurred, and now he is being suspected because he was in the wrong place at the wrong time. Which idiom refers to situations that easily invite suspicion?",
+      "answerOptions": [
+        {
+          "text": "瓜田李下",
+          "isCorrect": true,
+          "rationale": "This refers to a person being in a location (like a melon field) where their actions might be misinterpreted as stealing, even if they are innocent."
+        },
+        {
+          "text": "光明正大",
+          "isCorrect": false,
+          "rationale": "This describes being open and above board, which is the opposite of being in a suspicious situation."
+        },
+        {
+          "text": "問心無愧",
+          "isCorrect": false,
+          "rationale": "This means having a clear conscience, but it doesn't describe the external situation that causes others to be suspicious."
+        },
+        {
+          "text": "舐犢情深",
+          "isCorrect": false,
+          "rationale": "This refers to parental love and is unrelated to suspicion or crime."
+        }
+      ],
+      "hint": "This idiom mentions a field of certain fruits and being under a certain tree."
+    },
+    {
+      "question": "Ming was so focused on his mobile game that he completely ignored his mother when she told him it was time for dinner. Which idiom describes hearing something but acting as if you didn't?",
+      "answerOptions": [
+        {
+          "text": "洗耳恭聽",
+          "isCorrect": false,
+          "rationale": "This means to listen with great attention and respect, which is what Ming failed to do."
+        },
+        {
+          "text": "言聽計從",
+          "isCorrect": false,
+          "rationale": "This means to follow every piece of advice given, whereas Ming didn't even acknowledge his mother."
+        },
+        {
+          "text": "置若罔聞",
+          "isCorrect": true,
+          "rationale": "This describes placing something aside as if it were not heard, indicating total indifference to what someone is saying."
+        },
+        {
+          "text": "以訛傳訛",
+          "isCorrect": false,
+          "rationale": "This refers to the spread of incorrect information, not the refusal to listen to someone speaking to you."
+        }
+      ],
+      "hint": "Think of 'placing' a sound as if it were 'not heard'."
+    },
+    {
+      "question": "The badminton champion was already very strong, but after receiving special training from a former national coach, his skills improved even further. Which idiom best describes this situation?",
+      "answerOptions": [
+        {
+          "text": "雪上加霜",
+          "isCorrect": false,
+          "rationale": "This means one disaster after another, which is the opposite of a strong person getting better."
+        },
+        {
+          "text": "如虎添翼",
+          "isCorrect": true,
+          "rationale": "This metaphor describes a tiger being given wings, representing a powerful person becoming even more formidable with extra help."
+        },
+        {
+          "text": "釜底抽薪",
+          "isCorrect": false,
+          "rationale": "This refers to taking a drastic measure to solve a problem by going to its source, not adding strength."
+        },
+        {
+          "text": "瓜田李下",
+          "isCorrect": false,
+          "rationale": "This refers to avoiding suspicion, which does not relate to improving one's skills."
+        }
+      ],
+      "hint": "Think about a powerful land predator that is suddenly able to fly."
+    },
+    {
+      "question": "A student told a friend that Ming might be transferring schools. Soon, the whole class was convinced it was true and even held a farewell party, even though Ming was staying. Which idiom describes this spread of false news?",
+      "answerOptions": [
+        {
+          "text": "實事求是",
+          "isCorrect": false,
+          "rationale": "This describes basing one's beliefs on facts, but the students were based their beliefs on a rumor."
+        },
+        {
+          "text": "以訛傳訛",
+          "isCorrect": true,
+          "rationale": "This idiom means to pass on an error based on another error, resulting in the widespread belief of something false."
+        },
+        {
+          "text": "耳聞目睹",
+          "isCorrect": false,
+          "rationale": "This means to hear and see something personally, but the students only heard a rumor they didn't verify."
+        },
+        {
+          "text": "臨崖勒馬",
+          "isCorrect": false,
+          "rationale": "This refers to stopping a dangerous behavior, not the spread of information."
+        }
+      ],
+      "hint": "The idiom means using a 'mistake' to spread another 'mistake'."
+    },
+    {
+      "question": "Scammers are constantly coming up with new ways to trick people, from pretending to be government officials to using AI voices. Which idiom describes many things appearing one after another without end?",
+      "answerOptions": [
+        {
+          "text": "寥寥無幾",
+          "isCorrect": false,
+          "rationale": "This means there are very few of something, whereas scamming methods are numerous and frequent."
+        },
+        {
+          "text": "屈指可數",
+          "isCorrect": false,
+          "rationale": "This means something can be counted on one's fingers, implying it is rare, which is not true for scams."
+        },
+        {
+          "text": "層出不窮",
+          "isCorrect": true,
+          "rationale": "This idiom describes things appearing in layers or successions without ever coming to an end."
+        },
+        {
+          "text": "弄巧反拙",
+          "isCorrect": false,
+          "rationale": "This refers to a plan backfiring, not the continuous appearance of new things."
+        }
+      ],
+      "hint": "Think about things emerging in 'layers' and 'not being exhausted'."
+    },
+    {
+      "question": "Before the typhoon arrived, the family prepared by taping the windows and buying enough food for a week. Which idiom describes taking precautions early?",
+      "answerOptions": [
+        {
+          "text": "臨渴掘井",
+          "isCorrect": false,
+          "rationale": "This means digging a well only when one is thirsty, which is the opposite of preparing in advance."
+        },
+        {
+          "text": "臨陣磨槍",
+          "isCorrect": false,
+          "rationale": "This means sharpening your spear just before a battle, which is a last-minute preparation."
+        },
+        {
+          "text": "未雨綢繆",
+          "isCorrect": true,
+          "rationale": "This idiom refers to a bird repairing its nest before the rain falls, symbolizing preparation for future trouble."
+        },
+        {
+          "text": "置若罔聞",
+          "isCorrect": false,
+          "rationale": "This means ignoring warnings, but the family acted specifically because they listened to the typhoon warning."
+        }
+      ],
+      "hint": "The idiom refers to doing maintenance 'before it rains'."
+    },
+    {
+      "question": "To lose weight effectively, a man decided to control his diet and exercise every day at the same time. Which idiom describes using two methods at once to achieve a goal?",
+      "answerOptions": [
+        {
+          "text": "單打獨鬥",
+          "isCorrect": false,
+          "rationale": "This means fighting alone or using only one approach, whereas the man used two different methods."
+        },
+        {
+          "text": "顧此失彼",
+          "isCorrect": false,
+          "rationale": "This means taking care of one thing but losing another, indicating a lack of balance or simultaneous success."
+        },
+        {
+          "text": "雙管齊下",
+          "isCorrect": true,
+          "rationale": "Originating from a painter using two brushes at once, this idiom describes attacking a problem using two different approaches simultaneously."
+        },
+        {
+          "text": "如虎添翼",
+          "isCorrect": false,
+          "rationale": "While both methods helped, this idiom specifically describes a strong person getting help, not the use of two methods."
+        }
+      ],
+      "hint": "Think about a painter using 'two pens' or brushes at the same time."
+    }
+  ]
+}

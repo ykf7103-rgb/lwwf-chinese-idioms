@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成語小博士 — 樂善堂梁黃蕙芳紀念學校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@400;500;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2C1810;--paper:#FFF8E7;--paper-dark:#F4E4BC;
+  --red:#C41E3A;--red-dark:#8B0000;--red-light:#E74C3C;
+  --gold:#DAA520;--gold-light:#F4D03F;--gold-dark:#B8860B;
+  --jade:#2E7D32;--jade-light:#66BB6A;
+  --blue:#1565C0;--blue-light:#42A5F5;
+  --bg-gradient:linear-gradient(135deg,#F5E8C7 0%,#E8D5A0 50%,#D4A574 100%);
+  --shadow-soft:0 4px 20px rgba(44,24,16,0.12);
+  --shadow-strong:0 8px 30px rgba(44,24,16,0.25);
+  --radius:20px;--radius-sm:12px;
+  --font-han:'Noto Serif TC','Ma Shan Zheng',serif;
+  --font-body:'Noto Sans TC',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{
+  font-family:var(--font-body);color:var(--ink);
+  min-height:100vh;background:var(--bg-gradient);
+  background-attachment:fixed;line-height:1.6;
+}
+/* Paper texture overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(218,165,32,0.08) 0,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(196,30,58,0.06) 0,transparent 40%);
+  opacity:0.9;
+}
+#app{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:16px}
+
+/* ====== TOP BAR ====== */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,var(--red-dark),var(--red));
+  color:#FFF8E7;padding:14px 20px;border-radius:var(--radius);
+  box-shadow:var(--shadow-strong);margin-bottom:20px;
+  border:2px solid var(--gold);
+}
+.topbar-title{font-family:var(--font-han);font-size:1.4rem;font-weight:900;letter-spacing:3px}
+.topbar-title small{display:block;font-size:0.7rem;font-weight:400;opacity:0.85;letter-spacing:1px;margin-top:2px}
+.topbar-stats{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.stat-pill{
+  background:rgba(255,248,231,0.2);border:1px solid var(--gold);
+  padding:6px 14px;border-radius:20px;font-size:0.85rem;font-weight:700;
+  display:flex;align-items:center;gap:4px;
+}
+
+/* ====== TABS ====== */
+.nav-tabs{
+  display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding:4px;
+  background:rgba(255,248,231,0.8);border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);
+}
+.nav-tab{
+  flex:1;min-width:120px;padding:12px 18px;border:none;background:transparent;
+  border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.95rem;
+  font-weight:700;color:var(--ink);cursor:pointer;transition:all 0.3s;
+  white-space:nowrap;
+}
+.nav-tab:hover{background:rgba(196,30,58,0.1)}
+.nav-tab.active{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;box-shadow:0 4px 12px rgba(196,30,58,0.4);
+}
+
+/* ====== TAB CONTENT ====== */
+.tab-content{display:none;animation:fadeIn 0.4s}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ====== E-BOOK STYLE ====== */
+.book-container{
+  background:var(--paper);border-radius:var(--radius);
+  box-shadow:var(--shadow-strong);overflow:hidden;position:relative;
+  border:3px double var(--gold-dark);
+}
+.book-container::before{
+  content:'';position:absolute;top:0;bottom:0;left:50%;width:3px;
+  background:linear-gradient(180deg,transparent,rgba(44,24,16,0.15),transparent);
+  pointer-events:none;z-index:2;
+}
+@media (max-width:900px){.book-container::before{display:none}}
+
+/* Book cover */
+.book-cover{
+  background:linear-gradient(135deg,var(--red-dark) 0%,var(--red) 50%,var(--red-light) 100%);
+  color:#FFF8E7;padding:50px 30px;text-align:center;position:relative;
+  min-height:320px;display:flex;flex-direction:column;justify-content:center;
+}
+.book-cover::before{
+  content:'';position:absolute;inset:12px;border:2px solid var(--gold);
+  border-radius:8px;pointer-events:none;
+}
+.book-cover h1{
+  font-family:var(--font-han);font-size:3rem;font-weight:900;
+  letter-spacing:8px;margin-bottom:8px;text-shadow:3px 3px 6px rgba(0,0,0,0.3);
+}
+.book-cover .subtitle{font-size:1.1rem;opacity:0.9;margin-bottom:20px;letter-spacing:2px}
+.book-cover .stamp{
+  position:absolute;bottom:20px;right:20px;width:80px;height:80px;
+  border:3px solid var(--gold);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-han);font-size:1.3rem;color:var(--gold-light);
+  background:rgba(139,0,0,0.4);transform:rotate(-15deg);font-weight:900;
+}
+
+/* Index/contents grid */
+.idiom-index{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px;padding:24px;
+}
+.idiom-card-index{
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2px solid var(--gold-dark);border-radius:var(--radius-sm);
+  padding:18px 12px;text-align:center;cursor:pointer;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.idiom-card-index:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 20px rgba(218,165,32,0.4);
+  border-color:var(--red);
+}
+.idiom-card-index .num{
+  position:absolute;top:4px;right:8px;font-size:0.7rem;color:var(--red-dark);
+  font-weight:700;background:rgba(255,215,0,0.6);padding:2px 6px;border-radius:10px;
+}
+.idiom-card-index .emoji{font-size:2rem;margin:4px 0}
+.idiom-card-index .text{
+  font-family:var(--font-han);font-size:1.3rem;font-weight:900;
+  color:var(--ink);letter-spacing:2px;line-height:1.3;
+}
+.idiom-card-index .pinyin{font-size:0.75rem;color:var(--jade);margin-top:4px}
+
+/* Idiom detail page */
+.idiom-page{
+  display:none;padding:24px;background:var(--paper);
+  animation:pageFlip 0.6s;
+}
+.idiom-page.active{display:block}
+@keyframes pageFlip{
+  from{opacity:0;transform:rotateY(-15deg) translateX(-30px)}
+  to{opacity:1;transform:rotateY(0) translateX(0)}
+}
+.idiom-header{
+  display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;
+  padding-bottom:18px;border-bottom:3px double var(--gold-dark);margin-bottom:20px;
+}
+.idiom-header .big-text{
+  font-family:var(--font-han);font-size:3.5rem;font-weight:900;
+  letter-spacing:10px;color:var(--red-dark);
+  text-shadow:2px 2px 0 var(--gold-light);
+  display:flex;gap:4px;
+}
+.idiom-header .big-text .char{
+  display:inline-block;cursor:help;transition:all 0.2s;padding:0 4px;
+  border-radius:6px;
+}
+.idiom-header .big-text .char:hover{
+  background:var(--gold-light);transform:translateY(-4px);
+  box-shadow:0 4px 8px rgba(218,165,32,0.4);
+}
+.idiom-header .info{display:flex;flex-direction:column;gap:8px;min-width:0}
+.idiom-header .info .pinyin{
+  font-size:1rem;color:var(--jade);font-weight:500;letter-spacing:1px;
+}
+.idiom-header .info .theme-tag{
+  display:inline-block;background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;padding:4px 14px;border-radius:20px;font-size:0.8rem;
+  font-weight:700;width:fit-content;
+}
+.idiom-header .read-aloud{
+  background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+  color:var(--ink);border:2px solid var(--ink);border-radius:50%;
+  width:60px;height:60px;font-size:1.8rem;cursor:pointer;
+  box-shadow:var(--shadow-soft);transition:all 0.2s;
+}
+.idiom-header .read-aloud:hover{transform:scale(1.1);box-shadow:var(--shadow-strong)}
+.idiom-header .read-aloud.playing{
+  animation:pulse 1s infinite;background:linear-gradient(135deg,var(--red-light),var(--red));
+  color:#FFF8E7;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+/* E-book illustration */
+.ebook-illustration{
+  margin:0 auto 20px;max-width:520px;aspect-ratio:1/1;
+  border:3px solid var(--gold-dark);border-radius:var(--radius-sm);
+  overflow:hidden;box-shadow:var(--shadow-soft);background:#FFFDF5;cursor:pointer;
+}
+.ebook-illustration img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.3s}
+.ebook-illustration:hover img{transform:scale(1.05)}
+
+/* 4-panel comic (deprecated) */
+.comic-section{
+  background:#FFFDF5;border:2px solid var(--gold-dark);
+  border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;
+}
+.comic-section h3{
+  font-family:var(--font-han);color:var(--red-dark);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;font-size:1.2rem;
+}
+.comic-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+}
+.comic-panel{
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2px solid var(--ink);border-radius:var(--radius-sm);
+  padding:16px;position:relative;min-height:140px;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:0.95rem;line-height:1.7;
+  transition:all 0.3s;cursor:pointer;
+}
+.comic-panel:hover{
+  transform:scale(1.03);
+  box-shadow:0 6px 14px rgba(44,24,16,0.2);
+}
+.comic-panel .panel-num{
+  position:absolute;top:-10px;left:-10px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--red-dark);color:var(--gold-light);
+  font-weight:900;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--gold);
+}
+.comic-panel.ai-image{padding:0;overflow:hidden}
+.comic-panel.ai-image img{width:100%;height:100%;object-fit:cover}
+
+/* Meaning + example */
+.detail-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;
+}
+@media (max-width:700px){.detail-grid{grid-template-columns:1fr}}
+.detail-box{
+  background:#FFFDF5;border-left:6px solid var(--red);border-radius:var(--radius-sm);
+  padding:16px 18px;
+}
+.detail-box h4{
+  color:var(--red-dark);font-size:1rem;margin-bottom:8px;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.detail-box p{font-size:0.95rem;line-height:1.8;color:var(--ink)}
+.detail-box.jade{border-left-color:var(--jade)}
+.detail-box.jade h4{color:var(--jade)}
+.detail-box.blue{border-left-color:var(--blue)}
+.detail-box.blue h4{color:var(--blue)}
+.detail-box.gold{border-left-color:var(--gold-dark)}
+.detail-box.gold h4{color:var(--gold-dark)}
+
+/* Character breakdown */
+.chars-grid{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;
+}
+.char-card{
+  background:linear-gradient(135deg,#FFF,#F5E8C7);
+  border:1.5px solid var(--gold-dark);border-radius:var(--radius-sm);
+  padding:8px 10px;display:flex;align-items:center;gap:8px;
+  flex:1;min-width:140px;
+}
+.char-card .big{
+  font-family:var(--font-han);font-size:1.8rem;font-weight:900;color:var(--red-dark);
+}
+.char-card .meaning{font-size:0.8rem;color:var(--ink);opacity:0.8}
+
+/* Synonym/Antonym tags */
+.tag-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{
+  background:rgba(46,125,50,0.15);color:var(--jade);padding:3px 10px;
+  border-radius:12px;font-size:0.85rem;font-weight:500;
+}
+.tag.anti{background:rgba(196,30,58,0.15);color:var(--red-dark)}
+
+/* Navigation between idiom pages */
+.idiom-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px;background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border-top:2px solid var(--gold-dark);margin-top:16px;
+  border-radius:0 0 var(--radius) var(--radius);
+}
+.nav-btn{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;border:2px solid var(--gold);border-radius:var(--radius-sm);
+  padding:10px 22px;font-weight:700;cursor:pointer;font-size:0.95rem;
+  transition:all 0.2s;display:flex;align-items:center;gap:6px;font-family:var(--font-body);
+}
+.nav-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+.nav-btn.back-index{background:linear-gradient(135deg,var(--blue),var(--blue-light))}
+.idiom-counter{font-family:var(--font-han);font-size:1.1rem;color:var(--ink);font-weight:700}
+
+/* ====== DICTIONARY TOOLTIP ====== */
+.dict-tooltip{
+  position:fixed;background:#FFF8E7;border:2px solid var(--red);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  box-shadow:var(--shadow-strong);max-width:280px;z-index:100;
+  font-family:var(--font-body);animation:tooltipIn 0.2s;pointer-events:none;
+}
+@keyframes tooltipIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+.dict-tooltip .tt-char{
+  font-family:var(--font-han);font-size:2rem;font-weight:900;color:var(--red-dark);
+  margin-bottom:4px;
+}
+.dict-tooltip .tt-pinyin{font-size:0.9rem;color:var(--jade);margin-bottom:6px}
+.dict-tooltip .tt-meaning{font-size:0.9rem;color:var(--ink);line-height:1.5}
+
+/* ====== MATCHING GAME ====== */
+#gameArea{padding:0}
+.match-container{
+  background:var(--paper);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow-strong);
+  border:3px double var(--gold-dark);
+}
+.match-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--gold-dark);
+  flex-wrap:wrap;gap:10px;
+}
+.match-title{
+  font-family:var(--font-han);font-size:1.4rem;font-weight:900;color:var(--red-dark);
+}
+.match-stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat-chip{
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  border:2px solid var(--ink);padding:6px 14px;border-radius:20px;
+  font-weight:700;color:var(--ink);font-size:0.9rem;
+}
+.match-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+}
+.match-col-title{
+  text-align:center;font-family:var(--font-han);font-size:1.1rem;
+  color:var(--red-dark);margin-bottom:10px;padding:6px;
+  background:rgba(218,165,32,0.2);border-radius:var(--radius-sm);
+}
+.match-items{display:flex;flex-direction:column;gap:10px;min-height:400px}
+.match-item{
+  padding:14px 16px;border-radius:var(--radius-sm);cursor:pointer;
+  transition:all 0.25s;user-select:none;text-align:center;font-weight:700;
+  position:relative;
+}
+.match-item.idiom{
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2px solid var(--red);color:var(--red-dark);
+  font-family:var(--font-han);font-size:1.3rem;letter-spacing:3px;
+}
+.match-item.image{
+  background:linear-gradient(135deg,#FFF,#F5E8C7);
+  border:2px solid var(--gold-dark);padding:8px;min-height:100px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+}
+.match-item.image .emoji{font-size:2.8rem}
+.match-item.image .hint{font-size:0.75rem;color:var(--ink);opacity:0.7;text-align:center}
+.match-item:hover:not(.matched){transform:scale(1.03);box-shadow:var(--shadow-soft)}
+.match-item.selected{
+  outline:4px solid var(--blue);outline-offset:-2px;
+  transform:scale(1.03);box-shadow:0 6px 18px rgba(21,101,192,0.4);
+}
+.match-item.matched{
+  opacity:0.4;cursor:default;background:linear-gradient(135deg,#C8E6C9,#A5D6A7);
+  border-color:var(--jade);
+}
+.match-item.wrong{animation:shake 0.5s;border-color:var(--red-light)!important;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.difficulty-select{
+  display:flex;gap:10px;margin-bottom:20px;justify-content:center;flex-wrap:wrap;
+}
+.diff-btn{
+  padding:12px 24px;border-radius:var(--radius-sm);border:3px solid var(--gold-dark);
+  background:#FFFDF5;color:var(--ink);cursor:pointer;font-weight:700;
+  transition:all 0.2s;font-family:var(--font-body);font-size:0.95rem;
+}
+.diff-btn:hover{background:var(--gold-light)}
+.diff-btn.active{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;border-color:var(--gold);
+}
+
+/* ===== MC Matching Game ===== */
+.mc-game{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;
+  padding:10px;
+}
+.mc-image-wrap{
+  background:#FFFDF5;border:3px solid var(--gold-dark);
+  border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-soft);
+  max-width:480px;margin:0 auto;width:100%;padding:8px;
+  display:flex;align-items:center;justify-content:center;
+  aspect-ratio:4/3;
+}
+.mc-image-wrap img{
+  max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;display:block;animation:fadeIn 0.5s;border-radius:6px;
+}
+.mc-options{display:flex;flex-direction:column;gap:10px}
+.mc-option{
+  padding:14px 16px;background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2.5px solid var(--gold-dark);border-radius:var(--radius-sm);
+  font-family:var(--font-han);font-size:1.5rem;font-weight:900;letter-spacing:4px;
+  cursor:pointer;transition:all 0.25s;text-align:center;color:var(--ink);
+  position:relative;
+}
+.mc-option:hover:not(.disabled){
+  transform:translateX(-4px);background:var(--gold-light);
+  box-shadow:-6px 0 12px rgba(218,165,32,0.3);border-color:var(--red);
+}
+.mc-option.correct{
+  background:linear-gradient(135deg,#A5D6A7,#66BB6A);color:#FFF;
+  border-color:var(--jade);animation:correctPulse 0.5s;
+}
+.mc-option.wrong{
+  background:linear-gradient(135deg,#EF9A9A,#E57373);color:#FFF;
+  border-color:var(--red);animation:shake 0.5s;
+}
+.mc-option.disabled{cursor:default;opacity:0.85}
+@keyframes correctPulse{
+  0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}
+}
+@media (max-width:700px){
+  .mc-game{grid-template-columns:1fr}
+  .mc-option{font-size:1.2rem}
+}
+
+/* Game Over overlay */
+.game-over{
+  position:fixed;inset:0;background:rgba(44,24,16,0.8);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.game-over.active{display:flex}
+.game-over-card{
+  background:var(--paper);border:4px double var(--gold);border-radius:var(--radius);
+  padding:40px;max-width:400px;text-align:center;
+  box-shadow:0 0 50px rgba(218,165,32,0.6);
+}
+.game-over-card h2{font-family:var(--font-han);color:var(--red-dark);margin-bottom:12px;font-size:2rem}
+.game-over-card .big-score{
+  font-family:var(--font-han);font-size:3rem;color:var(--gold-dark);margin:16px 0;font-weight:900;
+}
+.game-over-card .stars{font-size:2.5rem;margin:14px 0;letter-spacing:8px}
+
+/* ====== QUIZ ====== */
+.quiz-container{
+  background:var(--paper);border-radius:var(--radius);padding:24px;
+  box-shadow:var(--shadow-strong);border:3px double var(--gold-dark);
+}
+.quiz-question{
+  background:#FFFDF5;border-left:6px solid var(--red);border-radius:var(--radius-sm);
+  padding:18px;margin-bottom:14px;
+}
+.quiz-question .q-num{
+  display:inline-block;background:var(--red-dark);color:var(--gold-light);
+  padding:4px 12px;border-radius:20px;font-size:0.85rem;font-weight:700;margin-bottom:8px;
+}
+.quiz-question .q-text{
+  font-size:1.05rem;line-height:1.8;margin-bottom:14px;
+}
+.quiz-question .q-text .blank{
+  display:inline-block;min-width:100px;border-bottom:2px dashed var(--red);
+  padding:0 6px;color:var(--red-dark);font-weight:700;font-family:var(--font-han);
+}
+.quiz-question .q-text .blank.filled{color:var(--jade);border-bottom-style:solid;border-bottom-color:var(--jade)}
+.quiz-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.quiz-option{
+  padding:12px 14px;border:2px solid var(--gold-dark);border-radius:var(--radius-sm);
+  background:#FFFDF5;cursor:pointer;font-family:var(--font-han);font-size:1.1rem;
+  font-weight:700;text-align:center;transition:all 0.2s;letter-spacing:2px;
+}
+.quiz-option:hover:not(.disabled){background:var(--gold-light);transform:translateY(-2px)}
+.quiz-option.correct{background:linear-gradient(135deg,#A5D6A7,#66BB6A);border-color:var(--jade);color:#FFF}
+.quiz-option.wrong{background:linear-gradient(135deg,#EF9A9A,#E57373);border-color:var(--red);color:#FFF}
+.quiz-option.disabled{cursor:default;opacity:0.8}
+
+.quiz-score-bar{
+  background:rgba(218,165,32,0.2);border-radius:var(--radius-sm);
+  padding:12px 18px;margin-bottom:16px;display:flex;justify-content:space-between;
+  align-items:center;font-weight:700;flex-wrap:wrap;gap:8px;
+}
+
+/* ====== 成語卡 (9:16 portrait — full-page image from NLM deck) ====== */
+.cards-9x16{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;padding:10px;
+}
+.card-9x16{
+  aspect-ratio:9/16;background:#FFFDF5;border:3px solid var(--gold-dark);
+  border-radius:var(--radius-sm);overflow:hidden;position:relative;cursor:pointer;
+  box-shadow:var(--shadow-soft);transition:all 0.25s;
+}
+.card-9x16:hover{
+  transform:translateY(-6px) scale(1.02);box-shadow:var(--shadow-strong);
+  border-color:var(--red);
+}
+.card-9x16 img{width:100%;height:100%;object-fit:cover;display:block}
+.card-9x16 .c-badge{
+  position:absolute;top:8px;left:8px;
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:var(--gold-light);
+  padding:4px 10px;border-radius:14px;font-size:0.8rem;font-weight:900;
+  border:1.5px solid var(--gold);box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  font-family:var(--font-han);letter-spacing:1px;
+}
+
+/* Deck toggle (豐富 / 精簡) */
+.deck-toggle-row{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.deck-toggle{
+  padding:8px 16px;border:2px solid var(--gold-dark);border-radius:10px;
+  background:#FFFDF5;cursor:pointer;font-weight:700;font-size:0.85rem;
+  font-family:var(--font-body);transition:all 0.2s;
+}
+.deck-toggle:hover{background:var(--gold-light)}
+.deck-toggle.active{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  border-color:var(--gold);
+}
+
+/* ====== 主題分類 Theme Sort ====== */
+.sort-area{padding:10px}
+.sort-pool{
+  display:flex;flex-wrap:wrap;gap:8px;padding:14px;margin-bottom:16px;
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2.5px dashed var(--gold-dark);border-radius:var(--radius-sm);
+  min-height:80px;
+}
+.sort-pill{
+  padding:10px 16px;background:linear-gradient(135deg,#FFFDF5,#F5E8C7);
+  border:2px solid var(--red-dark);border-radius:22px;cursor:pointer;
+  font-family:var(--font-han);font-weight:900;font-size:1.1rem;
+  color:var(--red-dark);letter-spacing:2px;transition:all 0.2s;user-select:none;
+}
+.sort-pill:hover{transform:translateY(-2px);box-shadow:var(--shadow-soft)}
+.sort-pill.selected{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:var(--gold-light);
+  transform:scale(1.06);box-shadow:0 4px 12px rgba(196,30,58,0.4);
+}
+.sort-buckets{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;
+}
+.sort-bucket{
+  background:#FFFDF5;border:3px solid var(--gold-dark);border-radius:var(--radius-sm);
+  padding:12px;min-height:140px;transition:all 0.2s;
+}
+.sort-bucket.hilite{background:var(--gold-light);border-color:var(--red);box-shadow:0 0 0 3px rgba(196,30,58,0.2)}
+.sort-bucket h4{
+  text-align:center;font-family:var(--font-han);color:var(--red-dark);
+  font-size:1.05rem;margin-bottom:8px;padding-bottom:6px;border-bottom:2px dashed var(--gold);
+}
+.sort-bucket .drop-list{display:flex;flex-wrap:wrap;gap:6px;min-height:60px}
+.sort-bucket .sort-pill.correct{border-color:var(--jade);background:linear-gradient(135deg,#C8E6C9,#A5D6A7);color:var(--jade);animation:correctPulse 0.4s}
+.sort-bucket .sort-pill.wrong{border-color:var(--red);background:linear-gradient(135deg,#EF9A9A,#E57373);color:#FFF;animation:shake 0.4s}
+
+/* ====== 字字拼字 Character Scramble ====== */
+.scr-container{padding:18px;text-align:center}
+.scr-meaning{
+  background:#FFFDF5;border-left:5px solid var(--red);border-radius:8px;
+  padding:14px 18px;margin:12px 0;font-size:1.05rem;line-height:1.8;
+}
+.scr-meaning .hint-label{color:var(--red-dark);font-weight:700;font-size:0.9rem;display:block;margin-bottom:4px}
+.scr-slots{
+  display:flex;gap:10px;justify-content:center;margin:18px 0;flex-wrap:wrap;min-height:80px;
+}
+.scr-slot{
+  width:68px;height:68px;border:3px dashed var(--gold-dark);border-radius:10px;
+  background:#FFFDF5;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-han);font-size:2rem;font-weight:900;color:var(--red-dark);
+  transition:all 0.25s;cursor:pointer;
+}
+.scr-slot.filled{border-style:solid;border-color:var(--red-dark);background:linear-gradient(135deg,#FFFDF5,#F5E8C7)}
+.scr-slot.correct{border-color:var(--jade);background:linear-gradient(135deg,#C8E6C9,#A5D6A7);color:var(--jade)}
+.scr-slot.wrong{border-color:var(--red);background:linear-gradient(135deg,#EF9A9A,#E57373);color:#FFF;animation:shake 0.4s}
+.scr-pool{
+  display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0;
+}
+.scr-char{
+  width:68px;height:68px;border:3px solid var(--gold-dark);border-radius:10px;
+  background:linear-gradient(135deg,#FFFDF5,#F5E8C7);cursor:pointer;
+  font-family:var(--font-han);font-size:2rem;font-weight:900;color:var(--red-dark);
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s;user-select:none;
+}
+.scr-char:hover{transform:translateY(-3px);box-shadow:var(--shadow-soft);background:var(--gold-light)}
+.scr-char.used{opacity:0.25;pointer-events:none;transform:scale(0.9)}
+.scr-actions{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+
+/* ====== Markdown body (study guide modal) ====== */
+.md-body{color:var(--ink);line-height:1.75;font-size:0.95rem}
+.md-body h1{color:var(--red-dark);font-family:var(--font-han);font-size:1.6rem;margin:18px 0 10px;text-align:center}
+.md-body h2{color:var(--red-dark);font-family:var(--font-han);font-size:1.25rem;margin:16px 0 8px;border-bottom:2px solid var(--gold);padding-bottom:4px}
+.md-body h3{color:var(--jade);font-family:var(--font-han);font-size:1.1rem;margin:12px 0 6px}
+.md-body p{margin:8px 0}
+.md-body hr{border:none;border-top:2px dashed var(--gold-dark);margin:14px 0}
+.md-body strong{color:var(--red-dark);font-weight:700}
+.md-body ol{padding-left:1.5rem;margin:8px 0}
+.md-body li{margin:4px 0}
+.md-body table.md-table{
+  width:100%;border-collapse:collapse;margin:12px 0;
+  background:#FFFDF5;border:2px solid var(--gold-dark);border-radius:8px;overflow:hidden;
+  font-size:0.85rem;
+}
+.md-body table.md-table th{
+  background:linear-gradient(135deg,var(--red-dark),var(--red));color:var(--gold-light);
+  padding:8px 10px;text-align:left;font-weight:700;
+}
+.md-body table.md-table td{
+  padding:8px 10px;border-top:1px solid var(--gold-dark);vertical-align:top;
+}
+.md-body table.md-table tr:nth-child(even) td{background:rgba(218,165,32,0.08)}
+
+/* ====== 翻牌記憶 Memory Match ====== */
+.mem-header-row{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--gold-dark);
+}
+.mem-diff-select{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.mem-diff-btn{
+  padding:10px 18px;border:2.5px solid var(--gold-dark);border-radius:12px;
+  background:#FFFDF5;cursor:pointer;font-weight:700;font-size:0.95rem;
+  font-family:var(--font-body);transition:all 0.2s;
+}
+.mem-diff-btn:hover{background:var(--gold-light)}
+.mem-diff-btn.active{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  border-color:var(--gold);transform:scale(1.05);
+}
+.mem-action-row{text-align:center;margin:10px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.mem-grid{
+  display:grid;gap:8px;margin:16px auto;max-width:760px;
+  grid-template-columns:repeat(var(--mem-cols,4),1fr);
+}
+.mem-card{
+  aspect-ratio:4/5;border-radius:10px;cursor:pointer;perspective:900px;
+  position:relative;
+}
+.mem-card-inner{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.mem-card.flipped .mem-card-inner,
+.mem-card.matched .mem-card-inner,
+.mem-card.peek .mem-card-inner{transform:rotateY(180deg)}
+.mem-face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:10px;overflow:hidden;border:2.5px solid var(--gold-dark);
+  display:flex;align-items:center;justify-content:center;background:#FFFDF5;
+}
+.mem-face.back{
+  background:linear-gradient(135deg,var(--red-dark),var(--red));
+  color:var(--gold-light);
+}
+.mem-face.back::before{
+  content:'成';font-family:var(--font-han);font-size:2.3rem;
+  color:var(--gold);font-weight:900;text-shadow:2px 2px 0 rgba(0,0,0,0.35);
+}
+.mem-face.front{transform:rotateY(180deg);padding:3px}
+.mem-face.front img{
+  max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;display:block;margin:auto;border-radius:4px;
+}
+.mem-face.front .mem-text{
+  font-family:var(--font-han);color:var(--red-dark);font-weight:900;
+  text-align:center;padding:4px;line-height:1.15;letter-spacing:2px;
+  font-size:clamp(0.9rem,3vw,1.4rem);
+}
+.mem-card.matched .mem-face{
+  border-color:var(--jade);box-shadow:0 0 0 3px rgba(46,125,50,0.35);
+}
+.mem-card.matched{opacity:0.85}
+@media (max-width:600px){
+  .mem-grid{gap:5px}
+  .mem-face.back::before{font-size:1.8rem}
+}
+
+/* ====== FOOTER ====== */
+.site-footer{
+  text-align:center;padding:20px;margin-top:30px;color:var(--ink);opacity:0.7;
+  font-size:0.85rem;
+}
+.site-footer a{color:var(--red-dark);text-decoration:none}
+
+/* ====== MOBILE ====== */
+@media (max-width:700px){
+  .idiom-header{grid-template-columns:auto 1fr;gap:12px}
+  .idiom-header .read-aloud{grid-column:1 / -1;margin:0 auto;width:50px;height:50px;font-size:1.4rem}
+  .idiom-header .big-text{font-size:2.4rem;letter-spacing:6px}
+  .comic-grid{grid-template-columns:1fr}
+  .match-grid{gap:10px}
+  .match-item.idiom{font-size:1.1rem}
+  .topbar-title{font-size:1.1rem}
+  .book-cover h1{font-size:2.2rem;letter-spacing:4px}
+}
+
+/* Success animation */
+@keyframes successPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
+.success-badge{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:8rem;z-index:500;pointer-events:none;animation:successPop 0.6s;
+}
+
+/* Idiom hero scene image (electronic book) */
+.idiom-hero{
+  width:100%;max-width:600px;margin:0 auto 16px;border:3px solid var(--gold-dark);
+  border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow-soft);
+  aspect-ratio:1/1;background:#FFFDF5;display:block;
+}
+.idiom-hero img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Match item with real image */
+.match-item.image.has-img{
+  padding:0;overflow:hidden;border-radius:var(--radius-sm);
+  position:relative;min-height:120px;
+}
+.match-item.image.has-img img{
+  width:100%;height:100%;object-fit:cover;display:block;min-height:120px;
+}
+.match-item.image.has-img .hint{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,0.7));
+  color:#FFF8E7;padding:20px 8px 6px;font-size:0.8rem;font-weight:700;
+}
+
+/* Infographic thumb */
+.infog-thumb{
+  cursor:pointer;border-radius:var(--radius-sm);overflow:hidden;
+  border:2px solid var(--gold-dark);background:#FFF;transition:all 0.2s;
+}
+.infog-thumb:hover{transform:scale(1.03);box-shadow:var(--shadow-soft)}
+.infog-thumb img{width:100%;display:block}
+.infog-thumb .caption{
+  padding:6px 10px;background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:#FFF8E7;font-size:0.85rem;font-weight:700;text-align:center;
+  font-family:var(--font-han);
+}
+
+/* ===== 3D Book / Page-flip viewer ===== */
+.book3d-wrap{
+  perspective:2400px;margin:20px auto;max-width:900px;
+  padding:10px 30px;
+}
+.book3d{
+  position:relative;width:100%;aspect-ratio:16/9;
+  transform-style:preserve-3d;
+  border-radius:8px;box-shadow:0 25px 50px rgba(0,0,0,0.35);
+  background:#2c1810;
+}
+.book3d::before,.book3d::after{
+  content:'';position:absolute;top:0;bottom:0;width:18px;
+  background:linear-gradient(90deg,#3a2418,#1c0f08);z-index:0;
+}
+.book3d::before{left:-18px;border-radius:4px 0 0 4px;box-shadow:-4px 0 8px rgba(0,0,0,0.3)}
+.book3d::after{right:-18px;border-radius:0 4px 4px 0;box-shadow:4px 0 8px rgba(0,0,0,0.3)}
+.book3d-page{
+  position:absolute;inset:0;background:#FFF;
+  transform-style:preserve-3d;transform-origin:left center;
+  transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  backface-visibility:hidden;overflow:hidden;
+  border-radius:0 6px 6px 0;
+  box-shadow:inset 15px 0 30px -10px rgba(0,0,0,0.2);
+}
+.book3d-page img{width:100%;height:100%;object-fit:contain;display:block;background:#FFFDF5}
+.book3d-page.flipped{transform:rotateY(-180deg)}
+.book3d-controls{
+  display:flex;justify-content:center;align-items:center;gap:14px;margin-top:16px;
+}
+.book3d-controls button{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  border:2px solid var(--gold);border-radius:30px;padding:10px 20px;
+  font-weight:700;cursor:pointer;font-size:0.95rem;font-family:var(--font-body);
+  box-shadow:var(--shadow-soft);transition:transform 0.2s;
+}
+.book3d-controls button:hover:not(:disabled){transform:translateY(-2px)}
+.book3d-controls button:disabled{opacity:0.35;cursor:not-allowed}
+.book3d-counter{
+  background:var(--ink);color:var(--gold-light);padding:8px 18px;
+  border-radius:30px;font-weight:700;border:2px solid var(--gold);
+  font-family:var(--font-han);letter-spacing:1px;
+}
+.deck-selector{display:flex;gap:8px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
+.deck-btn{
+  padding:10px 20px;border:2.5px solid var(--gold-dark);border-radius:12px;
+  background:#FFFDF5;cursor:pointer;font-weight:700;font-family:var(--font-body);
+  transition:all 0.2s;font-size:0.9rem;
+}
+.deck-btn:hover{background:var(--gold-light)}
+.deck-btn.active{
+  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#FFF8E7;
+  border-color:var(--gold);transform:scale(1.05);
+}
+/* Legacy slide viewer (kept for compatibility) */
+.slide-viewer{
+  background:#1a1a1a;border-radius:var(--radius-sm);overflow:hidden;
+  position:relative;max-width:900px;margin:12px auto;
+}
+.slide-viewer img{width:100%;display:block;background:#FFF}
+.slide-nav{
+  position:absolute;bottom:0;left:0;right:0;padding:10px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,0.85));
+  display:flex;justify-content:center;align-items:center;gap:10px;color:#FFF;
+}
+.slide-nav button{
+  background:var(--gold);color:var(--ink);border:2px solid var(--ink);
+  border-radius:8px;padding:6px 14px;font-weight:700;cursor:pointer;
+}
+.slide-nav button:disabled{opacity:0.3;cursor:not-allowed}
+.slide-counter{font-weight:700}
+
+/* Modal for fullscreen image/content */
+.modal{
+  position:fixed;inset:0;background:rgba(44,24,16,0.9);z-index:300;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal.active{display:flex}
+.modal-content{
+  background:var(--paper);border-radius:var(--radius);padding:20px;
+  max-width:95vw;max-height:90vh;overflow:auto;position:relative;
+  box-shadow:0 0 40px rgba(218,165,32,0.5);border:3px solid var(--gold);
+}
+.modal-close{
+  position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;
+  background:var(--red-dark);color:#FFF;border:none;cursor:pointer;
+  font-size:1.3rem;font-weight:700;z-index:10;
+}
+.modal-content img{max-width:100%;display:block;border-radius:var(--radius-sm)}
+.modal-content pre{
+  white-space:pre-wrap;max-width:85vw;font-family:var(--font-body);
+  line-height:1.8;color:var(--ink);
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title">
+      成語小博士
+      <small>樂善堂梁黃蕙芳紀念學校 · 五年級中文</small>
+    </div>
+    <div class="topbar-stats">
+      <div class="stat-pill">⭐ <span id="starCount">0</span>/15</div>
+      <div class="stat-pill">🪙 <span id="coinCount">0</span></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="extra">📚 自學教材</button>
+    <button class="nav-tab" data-tab="flash">🎴 成語卡</button>
+    <button class="nav-tab" data-tab="book">📖 成語電子書</button>
+    <button class="nav-tab" data-tab="match">🎮 配對遊戲</button>
+    <button class="nav-tab" data-tab="memory">🔄 翻牌記憶</button>
+    <button class="nav-tab" data-tab="sort">🧲 主題分類</button>
+    <button class="nav-tab" data-tab="scramble">🔤 字字拼字</button>
+    <button class="nav-tab" data-tab="quiz">📝 成語測驗</button>
+  </div>
+
+  <!-- ============ 電子書 TAB ============ -->
+  <div id="tabBook" class="tab-content">
+    <div class="book-container">
+      <!-- Cover (index view) -->
+      <div id="bookIndex">
+        <div class="book-cover">
+          <h1>成語小博士</h1>
+          <p class="subtitle">十五個故事 · 一本活的電子書</p>
+          <p style="font-size:0.9rem;opacity:0.85;letter-spacing:2px">P.58 — P.62 · 第 31-45 題</p>
+          <div class="stamp">小五</div>
+        </div>
+        <div class="idiom-index" id="idiomIndex"></div>
+      </div>
+
+      <!-- Idiom detail (shown when clicking a card) -->
+      <div id="idiomDetail">
+        <div class="idiom-page active" id="idiomPageContent"></div>
+        <div class="idiom-nav">
+          <button class="nav-btn back-index" onclick="showIndex()">← 返回目錄</button>
+          <span class="idiom-counter" id="idiomCounter">1 / 15</span>
+          <div style="display:flex;gap:8px">
+            <button class="nav-btn" id="prevBtn" onclick="prevIdiom()">◀ 上一個</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextIdiom()">下一個 ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 配對遊戲 TAB (single-question MC) ============ -->
+  <div id="tabMatch" class="tab-content">
+    <div class="match-container">
+      <div class="match-header">
+        <div class="match-title">🎮 睇圖選成語</div>
+        <div class="match-stats">
+          <div class="stat-chip">📝 第 <span id="mcQNum">1</span> / <span id="mcQTotal">15</span> 題</div>
+          <div class="stat-chip">✓ <span id="mcCorrect">0</span></div>
+          <div class="stat-chip">❌ <span id="mcWrong">0</span></div>
+        </div>
+      </div>
+
+      <!-- progress bar -->
+      <div style="background:rgba(218,165,32,0.2);height:10px;border-radius:5px;overflow:hidden;margin-bottom:14px">
+        <div id="mcProgress" style="height:100%;width:0%;background:linear-gradient(90deg,var(--red),var(--gold));transition:width 0.4s"></div>
+      </div>
+
+      <div id="mcGame" class="mc-game">
+        <div class="mc-image-wrap">
+          <img id="mcImage" src="" alt="成語圖">
+        </div>
+        <div class="mc-options" id="mcOptions"></div>
+      </div>
+
+      <div id="mcResult" style="display:none;text-align:center;padding:30px">
+        <h2 style="font-family:var(--font-han);color:var(--red-dark);font-size:2rem;margin-bottom:14px">🎉 完成!</h2>
+        <div style="font-size:3rem;margin:14px 0;letter-spacing:6px" id="mcStars"></div>
+        <div style="font-size:1.2rem;margin:10px 0">得分：<strong id="mcFinalScore" style="color:var(--gold-dark);font-size:1.6rem"></strong> / 15</div>
+        <div style="color:var(--gold-dark);font-weight:700;margin-top:8px" id="mcReward"></div>
+        <button class="nav-btn" style="margin-top:16px" onclick="startMatch()">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 主題分類 TAB ============ -->
+  <div id="tabSort" class="tab-content">
+    <div class="quiz-container">
+      <div class="mem-header-row">
+        <div class="match-title">🧲 主題分類挑戰</div>
+        <div class="match-stats">
+          <div class="stat-chip">✅ <span id="sortCorrect">0</span>/15</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:0.9rem;color:var(--ink);opacity:0.75;margin:6px 0 14px">先點選成語，再點選正確嘅寫作類型箱。分對 15 個得 +5 🪙</p>
+      <div class="sort-area">
+        <div id="sortPool" class="sort-pool"></div>
+        <div id="sortBuckets" class="sort-buckets"></div>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button class="nav-btn" onclick="startSort()">🔄 重新開始</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 字字拼字 TAB ============ -->
+  <div id="tabScramble" class="tab-content">
+    <div class="quiz-container">
+      <div class="mem-header-row">
+        <div class="match-title">🔤 字字拼字挑戰</div>
+        <div class="match-stats">
+          <div class="stat-chip">🎯 第 <span id="scrQNum">1</span>/<span id="scrQTotal">10</span> 題</div>
+          <div class="stat-chip">✓ <span id="scrCorrect">0</span></div>
+        </div>
+      </div>
+      <div class="scr-container">
+        <p style="font-size:0.88rem;color:var(--ink);opacity:0.75">根據意思，從下方 4 個字中揀出正確次序，砌成成語</p>
+        <div class="scr-meaning">
+          <span class="hint-label">💡 意思</span>
+          <span id="scrMeaning"></span>
+        </div>
+        <div id="scrSlots" class="scr-slots"></div>
+        <div id="scrPool" class="scr-pool"></div>
+        <div class="scr-actions">
+          <button class="nav-btn" onclick="resetScrSlots()" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--ink);border-color:var(--ink)">🔁 重設</button>
+          <button class="nav-btn" onclick="skipScr()">⏭️ 下一題</button>
+        </div>
+      </div>
+      <div id="scrResult" style="display:none;text-align:center;padding:30px">
+        <h2 style="font-family:var(--font-han);color:var(--red-dark);font-size:2rem;margin-bottom:14px">🎉 完成！</h2>
+        <div style="font-size:1.2rem">答對：<strong id="scrFinal" style="color:var(--jade)">0</strong> / 10</div>
+        <div style="margin-top:10px;color:var(--gold-dark);font-weight:700" id="scrReward"></div>
+        <button class="nav-btn" style="margin-top:16px" onclick="startScramble()">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 成語測驗 TAB ============ -->
+  <div id="tabQuiz" class="tab-content">
+    <div class="quiz-container">
+      <div class="quiz-score-bar">
+        <div>📝 成語測驗 · 選出正確的成語填入句子</div>
+        <div>分數：<strong id="quizScore">0</strong> / <span id="quizTotal">15</span></div>
+      </div>
+      <div id="quizList"></div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="nav-btn" onclick="startQuiz()">🔄 重新出題</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 成語卡 TAB (9:16 portrait cards) ============ -->
+  <div id="tabFlash" class="tab-content">
+    <div class="quiz-container">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-family:var(--font-han);font-size:1.4rem;color:var(--red-dark);font-weight:900">🎴 成語卡 · 15 張 9:16 直向</div>
+        <p style="color:var(--ink);opacity:0.75;margin-top:4px;font-size:0.85rem">由 NotebookLM 生成 · 點擊放大</p>
+        <div class="deck-toggle-row">
+          <button class="deck-toggle active" data-deck="old" onclick="switchDeck('old')">📚 豐富版（含 3 格劇場）</button>
+          <button class="deck-toggle" data-deck="new" onclick="switchDeck('new')">📇 精簡版</button>
+        </div>
+      </div>
+      <div class="cards-9x16" id="flashArea"></div>
+    </div>
+  </div>
+
+  <!-- ============ 翻牌記憶 TAB ============ -->
+  <div id="tabMemory" class="tab-content">
+    <div class="quiz-container">
+      <div class="mem-header-row">
+        <div class="match-title">🔄 翻牌記憶挑戰</div>
+        <div class="match-stats">
+          <div class="stat-chip">🔁 步 <span id="memMoves">0</span></div>
+          <div class="stat-chip">🎯 <span id="memPairs">0</span>/<span id="memTotal">6</span></div>
+          <div class="stat-chip">⏱️ <span id="memTime">0:00</span></div>
+        </div>
+      </div>
+
+      <div class="mem-diff-select">
+        <button class="mem-diff-btn active" data-diff="easy">🟢 易 · 6 對</button>
+        <button class="mem-diff-btn" data-diff="medium">🟡 中 · 10 對</button>
+        <button class="mem-diff-btn" data-diff="hard">🔴 難 · 15 對</button>
+      </div>
+
+      <div class="mem-action-row">
+        <button class="nav-btn" onclick="startMemory()">🎬 開始 / 重新</button>
+        <button class="nav-btn" onclick="peekMemory()" style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--ink);border-color:var(--ink)">👁️ 偷看 3 秒</button>
+      </div>
+
+      <p style="text-align:center;font-size:0.82rem;color:var(--ink);opacity:0.7;margin:4px 0">揭開兩張卡：一張成語大字 + 一張成語圖，配對成功即鎖定</p>
+
+      <div id="memGrid" class="mem-grid"></div>
+
+      <div id="memResult" style="display:none;text-align:center;padding:30px">
+        <h2 style="font-family:var(--font-han);color:var(--red-dark);font-size:2rem;margin-bottom:14px">🎉 通關!</h2>
+        <div style="font-size:3rem;margin:14px 0;letter-spacing:6px" id="memStars"></div>
+        <div style="font-size:1.05rem;margin:6px 0">步數：<strong id="memFinalMoves" style="color:var(--red-dark)">0</strong> &nbsp;·&nbsp; 時間：<strong id="memFinalTime" style="color:var(--red-dark)">0:00</strong></div>
+        <div style="color:var(--gold-dark);font-weight:700;margin-top:8px" id="memReward"></div>
+        <div style="margin-top:12px;font-size:0.9rem;color:var(--jade);font-weight:700" id="memBest"></div>
+        <button class="nav-btn" style="margin-top:16px" onclick="startMemory()">🔄 再玩一次</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 自學教材 TAB (FIRST) ============ -->
+  <div id="tabExtra" class="tab-content active">
+    <div class="quiz-container">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-family:var(--font-han);font-size:1.5rem;color:var(--red-dark);font-weight:900">📚 自學教材 · AI 生成</div>
+        <p style="color:var(--ink);opacity:0.8;margin-top:6px">翻開書本，同 AI 老師一齊學成語</p>
+      </div>
+
+      <!-- Supplementary cards grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+
+        <!-- Infographics -->
+        <div class="detail-box gold" style="grid-column:1 / -1">
+          <h4>🖼️ 成語圖卡（NLM 生成的資訊圖像）</h4>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px">
+            <div class="infog-thumb" onclick="showInfographic('group1_31-35')"><img src="assets/ch_idioms/infographics/group1_31-35.webp" alt="第一冊 31-35"><div class="caption">第一冊 · 31-35</div></div>
+            <div class="infog-thumb" onclick="showInfographic('group2_36-40')"><img src="assets/ch_idioms/infographics/group2_36-40.webp" alt="第二冊 36-40"><div class="caption">第二冊 · 36-40</div></div>
+            <div class="infog-thumb" onclick="showInfographic('group3_41-45')"><img src="assets/ch_idioms/infographics/group3_41-45.webp" alt="第三冊 41-45"><div class="caption">第三冊 · 41-45</div></div>
+          </div>
+        </div>
+
+        <!-- Audio podcast -->
+        <div class="detail-box jade" id="audioCard">
+          <h4>🎧 成語語音講解（兩位主持人 · 廣東話/繁中）</h4>
+          <div id="audioPlayer" style="margin-top:8px">
+            <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ NLM 語音生成中…完成後自動出現播放器</p>
+          </div>
+        </div>
+
+        <!-- Video overview (bilingual) -->
+        <div class="detail-box blue" id="videoCard">
+          <h4>🎬 成語影片總覽</h4>
+          <div style="display:flex;gap:8px;margin:8px 0 6px;flex-wrap:wrap">
+            <button class="deck-toggle active" data-vid="mandarin" onclick="switchVideo('mandarin')">🗣️ 普通話版</button>
+            <button class="deck-toggle" data-vid="cantonese" onclick="switchVideo('cantonese')">🗣️ 廣東話版</button>
+          </div>
+          <div id="videoPlayer" style="margin-top:6px">
+            <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ 載入中…</p>
+          </div>
+        </div>
+
+        <!-- Interactive page-flip book (main feature of 自學教材) -->
+        <div class="detail-box" id="slidesCard" style="grid-column:1 / -1;background:linear-gradient(180deg,#FFFDF5,#F5E8C7)">
+          <h4 style="text-align:center;font-size:1.3rem">📚 成語漫畫誌 · 電子書</h4>
+          <p style="font-size:0.9rem;color:var(--ink);opacity:0.8;margin:4px 0 14px;text-align:center">翻頁閱讀 · 每冊 16 頁 · 每成語 3 頁（四格漫畫 + 字字解釋 + 例句應用）</p>
+
+          <div class="deck-selector">
+            <button class="deck-btn active" data-deck="1">📕 第一冊 · 31-35</button>
+            <button class="deck-btn" data-deck="2">📗 第二冊 · 36-40</button>
+            <button class="deck-btn" data-deck="3">📘 第三冊 · 41-45</button>
+          </div>
+
+          <div class="book3d-wrap">
+            <div class="book3d" id="book3d">
+              <!-- Pages inserted by JS -->
+            </div>
+          </div>
+
+          <div class="book3d-controls">
+            <button id="bookPrev" onclick="bookFlip(-1)">◀ 上一頁</button>
+            <div class="book3d-counter"><span id="bookPageNum">1</span> / 16</div>
+            <button id="bookNext" onclick="bookFlip(1)">下一頁 ▶</button>
+          </div>
+
+          <div style="text-align:center;margin-top:14px">
+            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin-bottom:6px;font-weight:700">📥 下載完整 PDF</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <a href="assets/ch_idioms/slides/deck1_31-35.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第一冊 31-35</a>
+              <a href="assets/ch_idioms/slides/deck2_36-40.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第二冊 36-40</a>
+              <a href="assets/ch_idioms/slides/deck3_41-45.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第三冊 41-45</a>
+            </div>
+            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin:10px 0 6px;font-weight:700">🎴 15 頁 9:16 成語卡（兩個版本）</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <a href="assets/ch_idioms/slides/prev_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--jade),var(--jade-light));color:#FFF;border-color:var(--gold)">📚 豐富版 PDF</a>
+              <a href="assets/ch_idioms/slides/new_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#FFF;border-color:var(--gold)">📇 精簡版 PDF</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Study guide -->
+        <div class="detail-box gold">
+          <h4>📘 溫習指南</h4>
+          <p style="margin-top:8px;font-size:0.9rem">完整 15 個成語溫習筆記，包含意思、例句、近反義詞、造句練習。</p>
+          <button class="nav-btn" onclick="viewStudyGuide()" style="margin-top:10px">📖 打開溫習指南</button>
+        </div>
+
+        <!-- Mind map -->
+        <div class="detail-box jade">
+          <h4>🧠 成語分類思維導圖</h4>
+          <p style="margin-top:8px;font-size:0.9rem">將 15 個成語按主題分成三組，方便記憶和比較。</p>
+          <button class="nav-btn" onclick="viewMindMap()" style="margin-top:10px">🗺️ 打開思維導圖</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    © 樂善堂梁黃蕙芳紀念學校 · 五年級中文校本 AI 學習平台
+  </footer>
+
+</div>
+
+<!-- Tooltip container -->
+<div id="tooltip" class="dict-tooltip" style="display:none"></div>
+
+<!-- Success badge -->
+<div id="successBadge" class="success-badge" style="display:none">🎉</div>
+
+<!-- Modal for fullscreen content -->
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-content" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA LOADING
+// ============================================================
+let IDIOMS = [];
+let currentIdiomIdx = 0;
+let coins = 0;
+let starsEarned = new Set();
+
+// Progress persistence
+const STORAGE_KEY = 'p5_idioms_progress_v1';
+function saveProgress(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    coins,
+    stars:[...starsEarned],
+  }));
+}
+function loadProgress(){
+  try{
+    const s = localStorage.getItem(STORAGE_KEY);
+    if(!s) return;
+    const d = JSON.parse(s);
+    coins = d.coins || 0;
+    starsEarned = new Set(d.stars || []);
+    updateTopbar();
+  }catch(e){}
+}
+function updateTopbar(){
+  document.getElementById('coinCount').textContent = coins;
+  document.getElementById('starCount').textContent = starsEarned.size;
+}
+function addCoins(n){coins += n; saveProgress(); updateTopbar();}
+function markStar(id){
+  if(!starsEarned.has(id)){
+    starsEarned.add(id);
+    addCoins(1);
+  }
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+    if(tab === 'match') startMatch();
+    if(tab === 'quiz') startQuiz();
+    if(tab === 'flash') renderFlashcards();
+    if(tab === 'extra') checkExtraAssets();
+    if(tab === 'memory') startMemory();
+    if(tab === 'sort') startSort();
+    if(tab === 'scramble') startScramble();
+  });
+});
+
+// ============================================================
+// BOOK INDEX (cover + grid)
+// ============================================================
+function renderIndex(){
+  const grid = document.getElementById('idiomIndex');
+  grid.innerHTML = IDIOMS.map((idiom, i) => `
+    <div class="idiom-card-index" onclick="openIdiom(${i})" style="border-color:${idiom.color}">
+      <div class="num">${idiom.id}</div>
+      <div class="emoji">${idiom.emoji}</div>
+      <div class="text" style="color:${idiom.color}">${idiom.text}</div>
+      <div class="pinyin">${idiom.pinyin.split(' / ')[1] || idiom.pinyin}</div>
+    </div>
+  `).join('');
+  document.getElementById('bookIndex').style.display = '';
+  document.getElementById('idiomDetail').style.display = 'none';
+}
+
+function showIndex(){
+  document.getElementById('bookIndex').style.display = '';
+  document.getElementById('idiomDetail').style.display = 'none';
+}
+
+function openIdiom(idx){
+  currentIdiomIdx = idx;
+  renderIdiomPage();
+  document.getElementById('bookIndex').style.display = 'none';
+  document.getElementById('idiomDetail').style.display = '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function nextIdiom(){
+  if(currentIdiomIdx < IDIOMS.length - 1){
+    currentIdiomIdx++;
+    renderIdiomPage();
+  }
+}
+function prevIdiom(){
+  if(currentIdiomIdx > 0){
+    currentIdiomIdx--;
+    renderIdiomPage();
+  }
+}
+
+function renderIdiomPage(){
+  const idiom = IDIOMS[currentIdiomIdx];
+  markStar(idiom.id);
+
+  const charsHover = idiom.text.split('').map(c => {
+    const ch = idiom.characters.find(x => x.char === c);
+    return `<span class="char" data-char="${c}" data-meaning="${ch ? ch.meaning.replace(/"/g,'&quot;') : ''}">${c}</span>`;
+  }).join('');
+
+  const exampleHover = idiom.example.split('').map(c => {
+    const ch = idiom.characters.find(x => x.char === c);
+    if(ch) return `<span class="char" style="cursor:help;border-bottom:1px dotted ${idiom.color};padding:0 1px" data-char="${c}" data-meaning="${ch.meaning.replace(/"/g,'&quot;')}">${c}</span>`;
+    return c;
+  }).join('');
+
+  document.getElementById('idiomPageContent').innerHTML = `
+    <div class="idiom-header">
+      <div class="big-text" style="color:${idiom.color}">${charsHover}</div>
+      <div class="info">
+        <div class="pinyin">🔊 ${idiom.pinyin}</div>
+        <div class="theme-tag" style="background:linear-gradient(135deg,${idiom.color},${idiom.color}dd)">主題：${idiom.theme}</div>
+      </div>
+      <button class="read-aloud" onclick="readIdiomAloud(${currentIdiomIdx})" title="朗讀">🔊</button>
+    </div>
+
+    <div class="ebook-illustration">
+      <img src="assets/ch_idioms/tiles/idiom_${idiom.id}.jpg" alt="${idiom.text} 插圖" onclick="showModal(this.src)">
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-box">
+        <h4>💡 成語解釋</h4>
+        <p>${idiom.meaning}</p>
+      </div>
+      <div class="detail-box jade">
+        <h4>✏️ 例句示範</h4>
+        <p>${exampleHover}</p>
+      </div>
+    </div>
+
+    <div class="detail-box gold" style="margin-bottom:14px">
+      <h4>🔡 字字解釋（滑鼠移到字上有解釋）</h4>
+      <div class="chars-grid">
+        ${idiom.characters.map(c => `
+          <div class="char-card">
+            <div class="big" style="color:${idiom.color}">${c.char}</div>
+            <div class="meaning">${c.meaning}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-box jade">
+        <h4>✅ 近義詞</h4>
+        <div class="tag-list">
+          ${idiom.synonyms.map(s => `<span class="tag">${s}</span>`).join('')}
+        </div>
+      </div>
+      <div class="detail-box">
+        <h4>❌ 反義詞</h4>
+        <div class="tag-list">
+          ${idiom.antonyms.map(a => `<span class="tag anti">${a}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-box blue">
+      <h4>📝 寫作應用：可以用喺邊類文章？</h4>
+      <p>${idiom.useInArticles}</p>
+    </div>
+  `;
+
+  document.getElementById('idiomCounter').textContent = `${currentIdiomIdx + 1} / ${IDIOMS.length}`;
+  document.getElementById('prevBtn').disabled = currentIdiomIdx === 0;
+  document.getElementById('nextBtn').disabled = currentIdiomIdx === IDIOMS.length - 1;
+
+  wireHoverTooltips();
+}
+
+// ============================================================
+// HOVER DICTIONARY TOOLTIP
+// ============================================================
+const tooltip = document.getElementById('tooltip');
+
+function wireHoverTooltips(){
+  document.querySelectorAll('[data-char][data-meaning]').forEach(el => {
+    const meaning = el.getAttribute('data-meaning');
+    if(!meaning) return;
+    el.addEventListener('mouseenter', e => showTooltip(e, el));
+    el.addEventListener('mouseleave', hideTooltip);
+    el.addEventListener('click', e => {
+      // On mobile/tap: show tooltip briefly
+      showTooltip(e, el);
+      setTimeout(hideTooltip, 2500);
+    });
+  });
+}
+function showTooltip(e, el){
+  const ch = el.getAttribute('data-char');
+  const meaning = el.getAttribute('data-meaning');
+  tooltip.innerHTML = `
+    <div class="tt-char">${ch}</div>
+    <div class="tt-meaning">${meaning}</div>
+  `;
+  tooltip.style.display = 'block';
+  const rect = el.getBoundingClientRect();
+  let left = rect.left + rect.width/2 - 140;
+  let top = rect.bottom + 10;
+  if(left < 10) left = 10;
+  if(left + 280 > window.innerWidth) left = window.innerWidth - 290;
+  if(top + 150 > window.innerHeight) top = rect.top - 150;
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+}
+function hideTooltip(){tooltip.style.display = 'none'}
+
+// ============================================================
+// TTS (Speech Synthesis)
+// ============================================================
+let currentSpeech = null;
+function readIdiomAloud(idx){
+  const idiom = IDIOMS[idx];
+  const btn = document.querySelector('.read-aloud');
+
+  if(currentSpeech){
+    speechSynthesis.cancel();
+    currentSpeech = null;
+    btn?.classList.remove('playing');
+    return;
+  }
+
+  const text = `${idiom.text}。${idiom.meaning} 例句：${idiom.example}`;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-HK';
+  u.rate = 0.85;
+  u.pitch = 1.0;
+  // Prefer Cantonese/Mandarin voice
+  const voices = speechSynthesis.getVoices();
+  const zhVoice = voices.find(v => v.lang.startsWith('zh-HK'))
+              || voices.find(v => v.lang.startsWith('zh-TW'))
+              || voices.find(v => v.lang.startsWith('zh'));
+  if(zhVoice) u.voice = zhVoice;
+  u.onstart = () => btn?.classList.add('playing');
+  u.onend = () => {btn?.classList.remove('playing'); currentSpeech = null;};
+  u.onerror = () => {btn?.classList.remove('playing'); currentSpeech = null;};
+  currentSpeech = u;
+  speechSynthesis.speak(u);
+}
+
+// ============================================================
+// MATCHING GAME (single-question MC)
+// ============================================================
+let mcQueue = [];     // shuffled list of {id, text, distractors:[3 other text]}
+let mcIndex = 0;      // current question index
+let mcCorrect = 0;
+let mcWrong = 0;
+
+function startMatch(){
+  mcIndex = 0;
+  mcCorrect = 0;
+  mcWrong = 0;
+
+  // Build 15 questions from all idioms
+  const pool = [...IDIOMS];
+  shuffle(pool);
+  mcQueue = pool.map(idm => {
+    const others = IDIOMS.filter(x => x.id !== idm.id);
+    shuffle(others);
+    const distractors = others.slice(0, 3).map(o => o.text);
+    const options = [idm.text, ...distractors];
+    shuffle(options);
+    return {id: idm.id, text: idm.text, options};
+  });
+
+  document.getElementById('mcGame').style.display = '';
+  document.getElementById('mcResult').style.display = 'none';
+  document.getElementById('mcQTotal').textContent = mcQueue.length;
+  document.getElementById('mcCorrect').textContent = '0';
+  document.getElementById('mcWrong').textContent = '0';
+
+  renderMCQuestion();
+}
+
+function renderMCQuestion(){
+  if(mcIndex >= mcQueue.length) {
+    mcGameOver();
+    return;
+  }
+  const q = mcQueue[mcIndex];
+  document.getElementById('mcQNum').textContent = mcIndex + 1;
+  document.getElementById('mcProgress').style.width = (mcIndex / mcQueue.length * 100) + '%';
+  document.getElementById('mcImage').src = `assets/ch_idioms/new_tiles/idiom_${q.id}.jpg`;
+
+  const opts = document.getElementById('mcOptions');
+  opts.innerHTML = q.options.map(opt => `
+    <div class="mc-option" onclick="answerMC(this, '${opt}')">${opt}</div>
+  `).join('');
+}
+
+function answerMC(el, chosen){
+  if(document.querySelector('.mc-option.disabled')) return;
+  const q = mcQueue[mcIndex];
+  const correct = q.text;
+  document.querySelectorAll('.mc-option').forEach(o => {
+    o.classList.add('disabled');
+    if(o.textContent === correct) o.classList.add('correct');
+    else if(o === el) o.classList.add('wrong');
+  });
+
+  if(chosen === correct){
+    mcCorrect++;
+    document.getElementById('mcCorrect').textContent = mcCorrect;
+    playBeep(880, 0.1);
+  } else {
+    mcWrong++;
+    document.getElementById('mcWrong').textContent = mcWrong;
+    playBeep(220, 0.15);
+  }
+
+  setTimeout(() => {
+    mcIndex++;
+    renderMCQuestion();
+  }, 900);
+}
+
+function mcGameOver(){
+  document.getElementById('mcProgress').style.width = '100%';
+  document.getElementById('mcGame').style.display = 'none';
+  document.getElementById('mcResult').style.display = '';
+  document.getElementById('mcFinalScore').textContent = mcCorrect;
+
+  let stars = 1;
+  if(mcCorrect >= 10) stars = 2;
+  if(mcCorrect >= 13) stars = 3;
+  document.getElementById('mcStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+
+  const reward = stars;
+  addCoins(reward);
+  document.getElementById('mcReward').textContent = `+${reward} 🪙 金幣`;
+  showSuccessBadge();
+}
+
+function showSuccessBadge(){
+  const b = document.getElementById('successBadge');
+  b.style.display = 'block';
+  setTimeout(() => b.style.display = 'none', 1500);
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+}
+
+// Simple beep sound
+let audioCtx = null;
+function playBeep(freq, dur){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  }catch(e){}
+}
+
+// ============================================================
+// MEMORY MATCH (翻牌記憶)
+// ============================================================
+const MEM_LEVELS = {easy: 6, medium: 10, hard: 15};
+const MEM_COLS   = {easy: 4,  medium: 5,  hard: 6};
+let memDiff = 'easy';
+let memCards = [];       // {id, type:'text'|'tile', flipped, matched}
+let memFlipped = [];     // indices currently face-up (non-matched)
+let memMoves = 0;
+let memPairsFound = 0;
+let memStartTs = 0;
+let memTimer = null;
+let memGameOver = false;
+let memBusy = false;     // true while resolving a mismatch
+
+function startMemory(){
+  memMoves = 0;
+  memPairsFound = 0;
+  memFlipped = [];
+  memGameOver = false;
+  memBusy = false;
+
+  const n = MEM_LEVELS[memDiff];
+
+  // Pick n random distinct idioms
+  const pool = [...IDIOMS];
+  shuffle(pool);
+  const chosen = pool.slice(0, n);
+
+  // Build pairs: text card + tile card for each idiom
+  memCards = [];
+  chosen.forEach(idm => {
+    memCards.push({id: idm.id, type: 'text', text: idm.text, color: idm.color, flipped: false, matched: false});
+    memCards.push({id: idm.id, type: 'tile', text: idm.text, flipped: false, matched: false});
+  });
+  shuffle(memCards);
+
+  document.getElementById('memResult').style.display = 'none';
+  document.getElementById('memGrid').style.display = '';
+  document.getElementById('memTotal').textContent = n;
+  document.getElementById('memMoves').textContent = '0';
+  document.getElementById('memPairs').textContent = '0';
+  document.getElementById('memTime').textContent = '0:00';
+
+  const grid = document.getElementById('memGrid');
+  grid.style.setProperty('--mem-cols', MEM_COLS[memDiff]);
+
+  renderMemGrid();
+
+  memStartTs = Date.now();
+  clearInterval(memTimer);
+  memTimer = setInterval(updateMemTime, 1000);
+}
+
+function renderMemGrid(){
+  const grid = document.getElementById('memGrid');
+  grid.innerHTML = memCards.map((c, i) => {
+    const front = c.type === 'text'
+      ? `<div class="mem-face front"><div class="mem-text" style="color:${c.color || 'var(--red-dark)'}">${c.text}</div></div>`
+      : `<div class="mem-face front"><img src="assets/ch_idioms/new_tiles/idiom_${c.id}.jpg" alt="${c.text}"></div>`;
+    const cls = [
+      'mem-card',
+      c.flipped ? 'flipped' : '',
+      c.matched ? 'matched' : '',
+    ].filter(Boolean).join(' ');
+    return `
+      <div class="${cls}" onclick="flipMemCard(${i})">
+        <div class="mem-card-inner">
+          <div class="mem-face back"></div>
+          ${front}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function flipMemCard(i){
+  if(memGameOver || memBusy) return;
+  const card = memCards[i];
+  if(card.flipped || card.matched) return;
+  if(memFlipped.length >= 2) return;
+
+  card.flipped = true;
+  memFlipped.push(i);
+  renderMemGrid();
+
+  if(memFlipped.length === 2){
+    memMoves++;
+    document.getElementById('memMoves').textContent = memMoves;
+    checkMemMatch();
+  }
+}
+
+function checkMemMatch(){
+  const [ia, ib] = memFlipped;
+  const a = memCards[ia], b = memCards[ib];
+  const isMatch = a.id === b.id && a.type !== b.type;
+
+  if(isMatch){
+    memBusy = true;
+    setTimeout(() => {
+      a.matched = true;
+      b.matched = true;
+      memPairsFound++;
+      memFlipped = [];
+      memBusy = false;
+      document.getElementById('memPairs').textContent = memPairsFound;
+      renderMemGrid();
+      playBeep(880, 0.12);
+      markStar(a.id);
+      if(memPairsFound === MEM_LEVELS[memDiff]) memWin();
+    }, 350);
+  } else {
+    memBusy = true;
+    setTimeout(() => {
+      a.flipped = false;
+      b.flipped = false;
+      memFlipped = [];
+      memBusy = false;
+      renderMemGrid();
+      playBeep(220, 0.1);
+    }, 800);
+  }
+}
+
+function updateMemTime(){
+  const s = Math.floor((Date.now() - memStartTs) / 1000);
+  const m = Math.floor(s / 60);
+  const ss = (s % 60).toString().padStart(2, '0');
+  document.getElementById('memTime').textContent = `${m}:${ss}`;
+}
+
+function memWin(){
+  memGameOver = true;
+  clearInterval(memTimer);
+  const pairs = MEM_LEVELS[memDiff];
+  const timeStr = document.getElementById('memTime').textContent;
+
+  let stars = 1;
+  if(memMoves <= pairs * 2.5) stars = 2;
+  if(memMoves <= pairs * 2)   stars = 3;
+
+  const bestKey = `p5_idioms_memory_best_${memDiff}`;
+  let bestMsg = '';
+  try {
+    const cur = {moves: memMoves, time: timeStr, stars};
+    const raw = localStorage.getItem(bestKey);
+    const prev = raw ? JSON.parse(raw) : null;
+    if(!prev || memMoves < prev.moves){
+      localStorage.setItem(bestKey, JSON.stringify(cur));
+      bestMsg = '🌟 打破個人紀錄！';
+    } else {
+      bestMsg = `個人最佳：${prev.moves} 步 · ${prev.time} · ${'⭐'.repeat(prev.stars)}`;
+    }
+  } catch(e) {}
+
+  const reward = stars * 2;
+  addCoins(reward);
+
+  document.getElementById('memResult').style.display = '';
+  document.getElementById('memGrid').style.display = 'none';
+  document.getElementById('memStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+  document.getElementById('memFinalMoves').textContent = memMoves;
+  document.getElementById('memFinalTime').textContent = timeStr;
+  document.getElementById('memReward').textContent = `+${reward} 🪙 金幣`;
+  document.getElementById('memBest').textContent = bestMsg;
+  showSuccessBadge();
+}
+
+function peekMemory(){
+  if(memGameOver || memBusy) return;
+  memCards.forEach(c => { c.flipped = true; });
+  renderMemGrid();
+  setTimeout(() => {
+    memCards.forEach((c, i) => {
+      if(!c.matched && !memFlipped.includes(i)) c.flipped = false;
+    });
+    renderMemGrid();
+  }, 3000);
+}
+
+// Difficulty button handler
+document.addEventListener('click', e => {
+  if(e.target.matches('.mem-diff-btn')){
+    document.querySelectorAll('.mem-diff-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    memDiff = e.target.dataset.diff;
+    startMemory();
+  }
+});
+
+// ============================================================
+// 主題分類 Theme Sort (click pill, click bucket)
+// ============================================================
+// Manual tagging of each idiom to one writing type (most appropriate bucket).
+// Order of SORT_BUCKETS is display order; the tag is authoritative.
+const SORT_BUCKETS = [
+  {key:'描寫',  label:'🎨 描寫文 / 藝術欣賞'},
+  {key:'抒情',  label:'💗 抒情文 / 親情故事'},
+  {key:'合作',  label:'🎯 合作 / 策略分析'},
+  {key:'記敍',  label:'📰 記敍文 / 人物傳記'},
+  {key:'議論',  label:'⚖️ 議論文 / 品德教育'},
+];
+const IDIOM_TAGS = {
+  31:'描寫', 32:'描寫', 33:'抒情', 34:'議論', 35:'記敍',
+  36:'記敍', 37:'合作', 38:'記敍', 39:'議論', 40:'議論',
+  41:'記敍', 42:'議論', 43:'議論', 44:'議論', 45:'合作',
+};
+function tagIdiom(idm){ return IDIOM_TAGS[idm.id] || '描寫'; }
+
+let sortSelected = null;
+let sortCorrect = 0;
+let sortPlaced = {};   // idiomId -> bucketKey
+
+function startSort(){
+  sortSelected = null;
+  sortCorrect = 0;
+  sortPlaced = {};
+  document.getElementById('sortCorrect').textContent = '0';
+
+  // Render buckets
+  document.getElementById('sortBuckets').innerHTML = SORT_BUCKETS.map(b => `
+    <div class="sort-bucket" data-key="${b.key}" onclick="dropSort('${b.key}')">
+      <h4>${b.label}</h4>
+      <div class="drop-list" data-key="${b.key}"></div>
+    </div>
+  `).join('');
+
+  // Render pool (shuffled)
+  const pool = [...IDIOMS];
+  shuffle(pool);
+  document.getElementById('sortPool').innerHTML = pool.map(idm => `
+    <div class="sort-pill" data-id="${idm.id}" onclick="selectSort(${idm.id})">${idm.text}</div>
+  `).join('');
+}
+
+function selectSort(id){
+  document.querySelectorAll('.sort-pill').forEach(p => p.classList.remove('selected'));
+  const el = document.querySelector(`.sort-pool .sort-pill[data-id="${id}"]`);
+  if(!el) return;  // already placed
+  el.classList.add('selected');
+  sortSelected = id;
+}
+
+function dropSort(bucketKey){
+  if(sortSelected == null) return;
+  const idm = IDIOMS.find(i => i.id === sortSelected);
+  const correctKey = tagIdiom(idm);
+  const correct = bucketKey === correctKey;
+
+  // Move pill into bucket
+  const pill = document.querySelector(`.sort-pool .sort-pill[data-id="${sortSelected}"]`);
+  if(!pill) return;
+  const list = document.querySelector(`.sort-bucket[data-key="${bucketKey}"] .drop-list`);
+  pill.classList.remove('selected');
+  pill.classList.add(correct ? 'correct' : 'wrong');
+  pill.onclick = null;
+  list.appendChild(pill);
+
+  if(correct){
+    sortCorrect++;
+    document.getElementById('sortCorrect').textContent = sortCorrect;
+    markStar(idm.id);
+    playBeep(880, 0.1);
+    if(sortCorrect === 15){
+      addCoins(5);
+      setTimeout(() => {
+        showSuccessBadge();
+        alert('🎉 全部分對! +5 🪙');
+      }, 300);
+    }
+  } else {
+    playBeep(220, 0.12);
+    // After 1 sec, auto-move to the correct bucket in a subtle way
+    setTimeout(() => {
+      pill.classList.remove('wrong');
+      const correctList = document.querySelector(`.sort-bucket[data-key="${correctKey}"] .drop-list`);
+      correctList.appendChild(pill);
+      pill.classList.add('correct');
+    }, 800);
+  }
+  sortPlaced[sortSelected] = bucketKey;
+  sortSelected = null;
+}
+
+// ============================================================
+// 字字拼字 Character Scramble
+// ============================================================
+let scrQueue = [];
+let scrIdx = 0;
+let scrCorrect = 0;
+let scrSlots = [];  // array of char or null
+let scrPoolItems = []; // [{char, idx, used}]
+
+function startScramble(){
+  const pool = [...IDIOMS];
+  shuffle(pool);
+  scrQueue = pool.slice(0, 10);
+  scrIdx = 0;
+  scrCorrect = 0;
+  document.getElementById('scrCorrect').textContent = '0';
+  document.getElementById('scrQTotal').textContent = scrQueue.length;
+  document.getElementById('scrResult').style.display = 'none';
+  document.querySelector('.scr-container').style.display = '';
+  renderScr();
+}
+
+function renderScr(){
+  if(scrIdx >= scrQueue.length){ finishScr(); return; }
+  const idm = scrQueue[scrIdx];
+  document.getElementById('scrQNum').textContent = scrIdx + 1;
+  document.getElementById('scrMeaning').textContent = idm.meaning;
+
+  // 4 slots
+  scrSlots = Array(idm.text.length).fill(null);
+  renderScrSlots();
+
+  // Shuffled char pool
+  const chars = idm.text.split('');
+  shuffle(chars);
+  scrPoolItems = chars.map((c, i) => ({char:c, idx:i, used:false}));
+  renderScrPool();
+}
+
+function renderScrSlots(){
+  const el = document.getElementById('scrSlots');
+  el.innerHTML = scrSlots.map((c, i) =>
+    `<div class="scr-slot ${c ? 'filled' : ''}" onclick="popScrSlot(${i})">${c || ''}</div>`
+  ).join('');
+}
+function renderScrPool(){
+  const el = document.getElementById('scrPool');
+  el.innerHTML = scrPoolItems.map(p =>
+    `<div class="scr-char ${p.used ? 'used' : ''}" data-idx="${p.idx}" onclick="pickScrChar(${p.idx})">${p.char}</div>`
+  ).join('');
+}
+
+function pickScrChar(poolIdx){
+  const p = scrPoolItems.find(x => x.idx === poolIdx);
+  if(!p || p.used) return;
+  // find first empty slot
+  const slot = scrSlots.indexOf(null);
+  if(slot < 0) return;
+  scrSlots[slot] = p.char;
+  p.used = true;
+  p._placedSlot = slot;
+  renderScrSlots();
+  renderScrPool();
+  // If all slots filled → check
+  if(scrSlots.every(c => c !== null)) checkScr();
+}
+
+function popScrSlot(i){
+  if(!scrSlots[i]) return;
+  const ch = scrSlots[i];
+  scrSlots[i] = null;
+  // find pool item that had _placedSlot === i
+  const p = scrPoolItems.find(x => x._placedSlot === i && x.used);
+  if(p){ p.used = false; p._placedSlot = null; }
+  else {
+    // fallback: unmark first used pool with matching char
+    const fallback = scrPoolItems.find(x => x.used && x.char === ch);
+    if(fallback){ fallback.used = false; fallback._placedSlot = null; }
+  }
+  renderScrSlots();
+  renderScrPool();
+}
+
+function resetScrSlots(){
+  scrSlots = Array(scrSlots.length).fill(null);
+  scrPoolItems.forEach(p => { p.used = false; p._placedSlot = null; });
+  renderScrSlots();
+  renderScrPool();
+}
+
+function checkScr(){
+  const idm = scrQueue[scrIdx];
+  const guess = scrSlots.join('');
+  const correct = guess === idm.text;
+  const slotEls = document.querySelectorAll('#scrSlots .scr-slot');
+  slotEls.forEach(s => s.classList.add(correct ? 'correct' : 'wrong'));
+  if(correct){
+    scrCorrect++;
+    document.getElementById('scrCorrect').textContent = scrCorrect;
+    markStar(idm.id);
+    addCoins(1);
+    playBeep(880, 0.12);
+    setTimeout(() => { scrIdx++; renderScr(); }, 900);
+  } else {
+    playBeep(220, 0.15);
+    setTimeout(() => {
+      slotEls.forEach(s => s.classList.remove('wrong'));
+      resetScrSlots();
+    }, 900);
+  }
+}
+
+function skipScr(){
+  scrIdx++;
+  renderScr();
+}
+
+function finishScr(){
+  document.querySelector('.scr-container').style.display = 'none';
+  document.getElementById('scrResult').style.display = '';
+  document.getElementById('scrFinal').textContent = scrCorrect;
+  const reward = Math.ceil(scrCorrect / 2);
+  addCoins(reward);
+  document.getElementById('scrReward').textContent = `+${reward} 🪙 金幣`;
+  showSuccessBadge();
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+let quizAnswers = {};
+let quizScore = 0;
+
+function startQuiz(){
+  quizAnswers = {};
+  quizScore = 0;
+  document.getElementById('quizScore').textContent = '0';
+
+  // Generate 15 fill-in-the-blank style questions
+  const pool = [...IDIOMS];
+  shuffle(pool);
+  const questions = pool.slice(0, Math.min(15, pool.length));
+
+  document.getElementById('quizTotal').textContent = questions.length;
+
+  const list = document.getElementById('quizList');
+  list.innerHTML = questions.map((idm, qi) => {
+    // Create a sentence with blank
+    const sentence = idm.example.replace(idm.text, '<span class="blank" id="blank_'+qi+'">＿＿＿＿</span>');
+
+    // Generate 4 options (correct + 3 distractors from same pool but different)
+    const distractors = pool.filter(p => p.id !== idm.id);
+    shuffle(distractors);
+    const options = [idm.text, ...distractors.slice(0,3).map(d => d.text)];
+    shuffle(options);
+
+    return `
+      <div class="quiz-question">
+        <span class="q-num">第 ${qi+1} 題</span>
+        <div class="q-text">${sentence}</div>
+        <div class="quiz-options" data-qi="${qi}" data-correct="${idm.text}">
+          ${options.map(opt => `
+            <div class="quiz-option" onclick="answerQuiz(this, ${qi})" data-option="${opt}">${opt}</div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function answerQuiz(el, qi){
+  const container = el.parentElement;
+  if(container.querySelector('.disabled')) return; // already answered
+  const correct = container.dataset.correct;
+  const chosen = el.dataset.option;
+  container.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.classList.add('disabled');
+    if(opt.dataset.option === correct) opt.classList.add('correct');
+    else if(opt === el) opt.classList.add('wrong');
+  });
+  const blank = document.getElementById('blank_'+qi);
+  if(blank){
+    blank.textContent = correct;
+    blank.classList.add('filled');
+  }
+  if(chosen === correct){
+    quizScore++;
+    addCoins(1);
+    playBeep(880, 0.1);
+  } else {
+    playBeep(220, 0.15);
+  }
+  document.getElementById('quizScore').textContent = quizScore;
+  quizAnswers[qi] = chosen;
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+let cardDeck = 'old';  // 'old' (豐富版, 3-panel comic) or 'new' (精簡版)
+
+function renderFlashcards(){
+  const area = document.getElementById('flashArea');
+  const folder = cardDeck === 'old' ? 'cards_9x16' : 'new_cards_9x16';
+  area.innerHTML = IDIOMS.map(idm => `
+      <div class="card-9x16" onclick="showCardModal(${idm.id})" title="${idm.text}">
+        <div class="c-badge">#${idm.id}</div>
+        <img src="assets/ch_idioms/${folder}/idiom_${idm.id}.jpg" alt="${idm.text}" loading="lazy">
+      </div>
+  `).join('');
+}
+
+function switchDeck(which){
+  cardDeck = which;
+  document.querySelectorAll('.deck-toggle').forEach(b =>
+    b.classList.toggle('active', b.dataset.deck === which));
+  renderFlashcards();
+}
+
+function showCardModal(id){
+  const idm = IDIOMS.find(i => i.id === id);
+  if(!idm) return;
+  const folder = cardDeck === 'old' ? 'cards_9x16' : 'new_cards_9x16';
+  openModal(`
+    <div style="display:flex;justify-content:center;padding:4px">
+      <img src="assets/ch_idioms/${folder}/idiom_${idm.id}.jpg"
+           alt="${idm.text}"
+           style="width:auto;height:auto;max-width:min(440px,92vw);max-height:none;display:block;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+    </div>
+  `);
+}
+
+// ============================================================
+// MODAL & EXTRA TAB HELPERS
+// ============================================================
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('active');
+}
+function showInfographic(name){
+  openModal(`<img src="assets/ch_idioms/infographics/${name}.webp" alt="${name}" style="max-width:90vw;max-height:80vh;object-fit:contain">`);
+}
+// Lightweight markdown renderer — handles headers, bold, tables, <br>, hr, lists
+function renderMarkdown(md){
+  let out = md
+    // Preserve raw HTML break tags first
+    .replace(/<br\s*\/?>/gi, '§§BR§§')
+    // Escape HTML
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    // Restore breaks
+    .replace(/§§BR§§/g, '<br>');
+
+  // Tables (pipe-style)
+  out = out.replace(/(^\|[^\n]+\|\n)(\|[:\- |]+\|\n)((?:\|[^\n]+\|\n?)+)/gm, (_, head, sep, rows) => {
+    const parseRow = r => r.trim().replace(/^\||\|$/g,'').split(/\s*\|\s*/);
+    const ths = parseRow(head).map(c => `<th>${c.trim()}</th>`).join('');
+    const trs = rows.trim().split('\n').map(row =>
+      '<tr>' + parseRow(row).map(c => `<td>${c.trim()}</td>`).join('') + '</tr>'
+    ).join('');
+    return `<table class="md-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  });
+
+  // Headers
+  out = out
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // Bold **text**
+  out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // Horizontal rule
+  out = out.replace(/^---+$/gm, '<hr>');
+
+  // Numbered / bullet list (simple)
+  out = out.replace(/^(\d+)\.\s(.+)$/gm, '<li>$2</li>');
+
+  // Paragraphs (wrap consecutive lines that aren't already tags)
+  out = out.split(/\n{2,}/).map(para => {
+    if(/^\s*<(h\d|ul|ol|li|table|hr|blockquote|pre)/.test(para.trim())) return para;
+    return para.trim() ? `<p>${para.replace(/\n/g, '<br>')}</p>` : '';
+  }).join('\n');
+
+  // Wrap <li> groups in <ol>
+  out = out.replace(/(<p>(<li>[\s\S]*?<\/li>)+<\/p>)/g, m =>
+    '<ol>' + m.replace(/<\/?p>/g,'') + '</ol>');
+
+  return out;
+}
+
+function viewStudyGuide(){
+  fetch('data/study_guide.md')
+    .then(r => r.text())
+    .then(md => {
+      openModal(`
+        <div class="md-body" style="max-width:min(860px,92vw);padding:6px">
+          <h1 style="color:var(--red-dark);font-family:var(--font-han);text-align:center;margin-bottom:12px">📘 成語溫習指南</h1>
+          ${renderMarkdown(md)}
+        </div>
+      `);
+    })
+    .catch(() => openModal('<p>⏳ 學習指南載入中... 請稍候再試</p>'));
+}
+function viewMindMap(){
+  fetch('data/mindmap.json')
+    .then(r => r.json())
+    .then(d => {
+      const renderNode = (n, depth=0) => {
+        const indent = '　'.repeat(depth);
+        let h = `<li style="list-style:none;margin:4px 0;padding-left:${depth*12}px">
+          <span style="${depth===0?'font-size:1.2rem;font-weight:900;color:var(--red-dark);font-family:var(--font-han)':depth===1?'font-size:1.05rem;font-weight:700;color:var(--jade)':'font-size:0.95rem;color:var(--ink)'}">
+            ${depth>0?'・':''}${n.name}
+          </span>
+        `;
+        if(n.children){
+          h += '<ul style="list-style:none;padding:0;margin:4px 0">';
+          h += n.children.map(c => renderNode(c, depth+1)).join('');
+          h += '</ul>';
+        }
+        h += '</li>';
+        return h;
+      };
+      openModal(`<h2 style="color:var(--red-dark);margin-bottom:12px;font-family:var(--font-han)">🧠 成語分類思維導圖</h2><ul style="list-style:none;padding:0;max-width:85vw">${renderNode(d)}</ul>`);
+    })
+    .catch(() => openModal('<p>⏳ 思維導圖載入中... 請稍候再試</p>'));
+}
+
+// ============================================================
+// 3D Book page-flip viewer
+// ============================================================
+let currentDeck = 1;
+let currentPage = 1;
+const SLIDES_PER_DECK = 16;
+
+function initBook(){
+  const book = document.getElementById('book3d');
+  if(!book) return;
+  // Render pages in reverse order (last page at bottom, first page on top)
+  let html = '';
+  for(let i = SLIDES_PER_DECK; i >= 1; i--){
+    const pad = String(i).padStart(2, '0');
+    html += `<div class="book3d-page" data-page="${i}" style="z-index:${SLIDES_PER_DECK - i + 1}">
+      <img src="assets/ch_idioms/slides${currentDeck}/p${pad}.jpg" alt="p${i}" onclick="showModal(this.src)">
+    </div>`;
+  }
+  book.innerHTML = html;
+  currentPage = 1;
+  updateBookControls();
+}
+
+function bookFlip(delta){
+  const nextPage = currentPage + delta;
+  if(nextPage < 1 || nextPage > SLIDES_PER_DECK) return;
+
+  if(delta > 0){
+    // Flip forward: flip current page to the left
+    const page = document.querySelector(`.book3d-page[data-page="${currentPage}"]`);
+    if(page){
+      page.classList.add('flipped');
+      // Lower z-index after animation starts so the next page shows
+      setTimeout(() => { page.style.zIndex = currentPage - 1; }, 400);
+    }
+  } else {
+    // Flip backward: unflip the target page
+    const page = document.querySelector(`.book3d-page[data-page="${nextPage}"]`);
+    if(page){
+      page.style.zIndex = SLIDES_PER_DECK - nextPage + 1;
+      page.classList.remove('flipped');
+    }
+  }
+  currentPage = nextPage;
+  updateBookControls();
+}
+
+function updateBookControls(){
+  const numEl = document.getElementById('bookPageNum');
+  if(numEl) numEl.textContent = currentPage;
+  const prev = document.getElementById('bookPrev');
+  const next = document.getElementById('bookNext');
+  if(prev) prev.disabled = currentPage === 1;
+  if(next) next.disabled = currentPage === SLIDES_PER_DECK;
+}
+
+function showModal(src){
+  openModal(`<img src="${src}" style="max-width:90vw;max-height:85vh;object-fit:contain">`);
+}
+
+// Wire up deck selector buttons
+document.addEventListener('click', e => {
+  if(e.target.matches('.deck-btn')){
+    document.querySelectorAll('.deck-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    currentDeck = parseInt(e.target.dataset.deck, 10);
+    initBook();
+  }
+});
+
+function switchVideo(lang){
+  const src = lang === 'mandarin'
+    ? 'assets/ch_idioms/video/summary_mandarin.mp4'
+    : 'assets/ch_idioms/video/summary.mp4';
+  const label = lang === 'mandarin' ? '🗣️ 普通話旁白 · NLM 新生成' : '🗣️ 廣東話旁白 · 原版';
+  document.querySelectorAll('#videoCard .deck-toggle').forEach(b =>
+    b.classList.toggle('active', b.dataset.vid === lang));
+  document.getElementById('videoPlayer').innerHTML = `
+    <video controls style="width:100%;border-radius:12px;margin-top:6px" preload="metadata">
+      <source src="${src}" type="video/mp4">
+    </video>
+    <p style="font-size:0.78rem;opacity:0.75;margin-top:6px">${label}</p>
+  `;
+}
+
+// Check & load extra assets (audio/video/slides) if they exist
+function checkExtraAssets(){
+  // audio (NLM outputs m4a/aac in .mp4 container)
+  fetch('assets/ch_idioms/audio/podcast.m4a', {method:'HEAD'})
+    .then(r => {
+      if(r.ok) {
+        document.getElementById('audioPlayer').innerHTML = `
+          <audio controls style="width:100%;margin-top:8px">
+            <source src="assets/ch_idioms/audio/podcast.m4a" type="audio/mp4">
+          </audio>
+          <p style="font-size:0.8rem;opacity:0.7;margin-top:6px">🎙️ 由 NotebookLM 兩位主持人主講</p>
+        `;
+      }
+    }).catch(()=>{});
+  // video (default to Mandarin)
+  switchVideo('mandarin');
+  // Initialize 3D book viewer (only once per session)
+  if(!document.querySelector('#book3d .book3d-page')){
+    initBook();
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+fetch('data/idioms.json')
+  .then(r => r.json())
+  .then(data => {
+    IDIOMS = data.idioms;
+    loadProgress();
+    renderIndex();
+    // 自學教材 is the default tab — init its content immediately
+    checkExtraAssets();
+  })
+  .catch(err => {
+    console.error('Failed to load idioms:', err);
+    document.getElementById('idiomIndex').innerHTML = '<p style="grid-column:1/-1;padding:40px;text-align:center;color:red">載入失敗，請用 HTTP 伺服器打開：<br><code>python -m http.server</code></p>';
+  });
+
+// Load voices (some browsers need this)
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = () => {};
+}
+</script>
+
+</body>
+</html>
