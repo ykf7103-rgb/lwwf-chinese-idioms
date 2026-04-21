@@ -2390,50 +2390,79 @@ function initVoiceSpeechRecog(){
   if(!SR) return null;
   const r = new SR();
   r.lang = 'yue-Hant-HK';
-  r.continuous = true;
+  r.continuous = false;     // one utterance at a time — more reliable cross-browser
   r.interimResults = true;
   r.maxAlternatives = 1;
   return r;
 }
 
 function toggleVoiceRecording(){
+  const ta = document.getElementById('voiceText');
+  const btn = document.getElementById('voiceMicBtn');
+
   if(!voiceRecog){
     voiceRecog = initVoiceSpeechRecog();
     if(!voiceRecog){
-      alert('你個瀏覽器唔支援錄音辨識 · 請用 Chrome / Edge / Safari 打開 🙏');
+      alert('⚠️ 你個瀏覽器唔支援語音辨識\n\n請改用：\n• Chrome（電腦 / Android）\n• Edge\n• Safari（iPhone / iPad）\n\n或者直接喺文字框打你嘅解釋都可以 ✏️');
       return;
     }
     voiceRecog.onresult = (e) => {
-      let t = '';
-      for(let i = 0; i < e.results.length; i++){
-        t += e.results[i][0].transcript;
+      // Append transcript to existing text (allows multiple utterances)
+      let final = ta.dataset.finalText || '';
+      let interim = '';
+      for(let i = e.resultIndex; i < e.results.length; i++){
+        if(e.results[i].isFinal) final += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
       }
-      document.getElementById('voiceText').value = t;
+      ta.dataset.finalText = final;
+      ta.value = (final + interim).trim();
     };
     voiceRecog.onerror = (e) => {
       console.warn('voice recog error:', e.error);
+      if(e.error === 'not-allowed' || e.error === 'service-not-allowed'){
+        alert('⚠️ 請喺瀏覽器設定允許麥克風權限 🎤\n\n提示：網址列旁邊嘅鎖頭圖示 → 允許麥克風');
+      } else if(e.error === 'language-not-supported'){
+        voiceRecog.lang = 'zh-HK';
+      } else if(e.error === 'no-speech'){
+        // silent — just stop quietly
+      } else if(e.error !== 'aborted'){
+        alert('⚠️ 錄音出錯：' + e.error + '\n\n可以直接打字代替');
+      }
       stopVoiceRecording();
-      if(e.error === 'not-allowed') alert('請允許麥克風權限 🎤');
-      else if(e.error === 'language-not-supported') voiceRecog.lang = 'zh-HK';
     };
-    voiceRecog.onend = () => stopVoiceRecording();
+    voiceRecog.onend = () => {
+      // Auto-restart if still in recording mode (for continuous feel with continuous=false)
+      if(voiceIsRecording){
+        try { voiceRecog.start(); return; } catch(e) {}
+      }
+      stopVoiceRecording();
+    };
   }
+
   if(voiceIsRecording){
-    voiceRecog.stop();
+    voiceIsRecording = false;  // prevent auto-restart in onend
+    try { voiceRecog.stop(); } catch(e){}
+    stopVoiceRecording();
   } else {
+    ta.dataset.finalText = ta.value;  // preserve existing text
     try {
       voiceRecog.start();
       voiceIsRecording = true;
-      document.getElementById('voiceMicBtn').classList.add('recording');
-      document.getElementById('voiceText').placeholder = '🎤 錄音中... 講完再㩒一次停';
-    } catch(e){ console.warn(e); }
+      btn.classList.add('recording');
+      ta.placeholder = '🎤 錄音中... 再㩒一次停';
+    } catch(e){
+      console.warn('start failed:', e);
+      alert('⚠️ 開始錄音失敗：' + (e.message || e) + '\n\n可能原因：已經喺錄音中，請等一等再試');
+    }
   }
 }
 
 function stopVoiceRecording(){
   voiceIsRecording = false;
-  document.getElementById('voiceMicBtn').classList.remove('recording');
-  document.getElementById('voiceText').placeholder = '點擊 🎤 開始錄音，或直接打字...';
+  const btn = document.getElementById('voiceMicBtn');
+  const ta = document.getElementById('voiceText');
+  if(btn) btn.classList.remove('recording');
+  if(ta) ta.placeholder = '點擊 🎤 開始錄音，或直接打字...';
 }
 
 async function submitVoiceExplanation(){
@@ -2492,15 +2521,28 @@ feedback 要用繁體中文，鼓勵語氣，指出講得好嘅地方 + 1 個可
       })
     });
     const data = await res.json().catch(() => ({}));
-    if(!res.ok){ throw new Error(data.message || 'API_ERROR'); }
+    if(!res.ok){ throw new Error(data.message || ('API_ERROR_' + res.status)); }
 
-    const reply = (data.reply || '').trim();
-    // Extract JSON from reply
-    const m = reply.match(/\{[\s\S]*?\}/);
-    if(!m){ throw new Error('PARSE_ERROR'); }
-    const parsed = JSON.parse(m[0]);
+    // data.reply can be an object or a string. Handle both.
+    let parsed = null;
+    if(data.reply && typeof data.reply === 'object'){
+      parsed = data.reply;
+    } else {
+      let txt = String(data.reply || '').trim();
+      // Strip code fences like ```json ... ```
+      txt = txt.replace(/^```(?:json)?\s*|\s*```$/g, '').trim();
+      // Find first JSON object in the text
+      const m = txt.match(/\{[\s\S]*\}/);
+      if(m){
+        try { parsed = JSON.parse(m[0]); } catch(e){ console.warn('JSON parse failed:', m[0], e); }
+      }
+    }
+    if(!parsed){
+      console.warn('unparseable reply:', data);
+      throw new Error('AI 回應格式異常，請再試一次');
+    }
     const score = Math.max(0, Math.min(100, parseInt(parsed.score) || 0));
-    const feedback = parsed.feedback || '好嘗試！';
+    const feedback = parsed.feedback || '好嘗試！繼續努力 💪';
     showVoiceFeedback(score, feedback);
 
     // Stats
