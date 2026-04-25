@@ -1391,7 +1391,45 @@ body::before{
       <!-- Supplementary cards grid -->
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
 
-        <!-- Infographics -->
+        <!-- Interactive page-flip book (FIRST · main feature) -->
+        <div class="detail-box" id="slidesCard" style="grid-column:1 / -1;background:linear-gradient(180deg,#FFFDF5,#F5E8C7)">
+          <h4 style="text-align:center;font-size:1.3rem">📚 成語漫畫誌 · 電子書</h4>
+          <p style="font-size:0.9rem;color:var(--ink);opacity:0.8;margin:4px 0 14px;text-align:center">翻頁閱讀 · 每冊 16 頁 · 每成語 3 頁（四格漫畫 + 字字解釋 + 例句應用）</p>
+
+          <div class="deck-selector">
+            <button class="deck-btn active" data-deck="1">📕 第一冊 · 31-35</button>
+            <button class="deck-btn" data-deck="2">📗 第二冊 · 36-40</button>
+            <button class="deck-btn" data-deck="3">📘 第三冊 · 41-45</button>
+          </div>
+
+          <div class="book3d-wrap">
+            <div class="book3d" id="book3d">
+              <!-- Pages inserted by JS -->
+            </div>
+          </div>
+
+          <div class="book3d-controls">
+            <button id="bookPrev" onclick="bookFlip(-1)">◀ 上一頁</button>
+            <div class="book3d-counter"><span id="bookPageNum">1</span> / 16</div>
+            <button id="bookNext" onclick="bookFlip(1)">下一頁 ▶</button>
+          </div>
+
+          <div style="text-align:center;margin-top:14px">
+            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin-bottom:6px;font-weight:700">📥 下載完整 PDF</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <a href="assets/ch_idioms/slides/deck1_31-35.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第一冊 31-35</a>
+              <a href="assets/ch_idioms/slides/deck2_36-40.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第二冊 36-40</a>
+              <a href="assets/ch_idioms/slides/deck3_41-45.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第三冊 41-45</a>
+            </div>
+            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin:10px 0 6px;font-weight:700">🎴 15 頁 9:16 成語卡（兩個版本）</div>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <a href="assets/ch_idioms/slides/prev_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--jade),var(--jade-light));color:#FFF;border-color:var(--gold)">📚 豐富版 PDF</a>
+              <a href="assets/ch_idioms/slides/new_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#FFF;border-color:var(--gold)">📇 精簡版 PDF</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Infographics (moved below book) -->
         <div class="detail-box gold" style="grid-column:1 / -1">
           <h4>🖼️ 成語圖卡（NLM 生成的資訊圖像）</h4>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:10px">
@@ -1403,7 +1441,7 @@ body::before{
 
         <!-- Audio podcast -->
         <div class="detail-box jade" id="audioCard">
-          <h4>🎧 成語語音講解（兩位主持人 · 廣東話/繁中）</h4>
+          <h4>🎧 成語語音講解(兩位主持人 · 廣東話/繁中)</h4>
           <div id="audioPlayer" style="margin-top:8px">
             <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ NLM 語音生成中…完成後自動出現播放器</p>
           </div>
@@ -1444,44 +1482,6 @@ body::before{
           <h4>🎬 成語影片總覽 · 普通話旁白</h4>
           <div id="videoPlayer" style="margin-top:8px">
             <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ 載入中…</p>
-          </div>
-        </div>
-
-        <!-- Interactive page-flip book (main feature of 自學教材) -->
-        <div class="detail-box" id="slidesCard" style="grid-column:1 / -1;background:linear-gradient(180deg,#FFFDF5,#F5E8C7)">
-          <h4 style="text-align:center;font-size:1.3rem">📚 成語漫畫誌 · 電子書</h4>
-          <p style="font-size:0.9rem;color:var(--ink);opacity:0.8;margin:4px 0 14px;text-align:center">翻頁閱讀 · 每冊 16 頁 · 每成語 3 頁（四格漫畫 + 字字解釋 + 例句應用）</p>
-
-          <div class="deck-selector">
-            <button class="deck-btn active" data-deck="1">📕 第一冊 · 31-35</button>
-            <button class="deck-btn" data-deck="2">📗 第二冊 · 36-40</button>
-            <button class="deck-btn" data-deck="3">📘 第三冊 · 41-45</button>
-          </div>
-
-          <div class="book3d-wrap">
-            <div class="book3d" id="book3d">
-              <!-- Pages inserted by JS -->
-            </div>
-          </div>
-
-          <div class="book3d-controls">
-            <button id="bookPrev" onclick="bookFlip(-1)">◀ 上一頁</button>
-            <div class="book3d-counter"><span id="bookPageNum">1</span> / 16</div>
-            <button id="bookNext" onclick="bookFlip(1)">下一頁 ▶</button>
-          </div>
-
-          <div style="text-align:center;margin-top:14px">
-            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin-bottom:6px;font-weight:700">📥 下載完整 PDF</div>
-            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-              <a href="assets/ch_idioms/slides/deck1_31-35.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第一冊 31-35</a>
-              <a href="assets/ch_idioms/slides/deck2_36-40.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第二冊 36-40</a>
-              <a href="assets/ch_idioms/slides/deck3_41-45.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem">📄 第三冊 41-45</a>
-            </div>
-            <div style="font-size:0.82rem;color:var(--ink);opacity:0.75;margin:10px 0 6px;font-weight:700">🎴 15 頁 9:16 成語卡（兩個版本）</div>
-            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-              <a href="assets/ch_idioms/slides/prev_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--jade),var(--jade-light));color:#FFF;border-color:var(--gold)">📚 豐富版 PDF</a>
-              <a href="assets/ch_idioms/slides/new_15page_deck.pdf" target="_blank" class="nav-btn" style="text-decoration:none;font-size:0.82rem;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#FFF;border-color:var(--gold)">📇 精簡版 PDF</a>
-            </div>
           </div>
         </div>
 
