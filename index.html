@@ -842,6 +842,28 @@ body::before{
   .mem-face.back::before{font-size:1.8rem}
 }
 
+/* ====== Suno Songs Card ====== */
+.suno-songs{display:flex;flex-direction:column;gap:14px}
+.suno-row{
+  background:#FFFDF5;border:2px solid var(--gold-dark);border-radius:12px;
+  padding:12px 14px;box-shadow:var(--shadow-soft);
+}
+.suno-title{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  font-family:var(--font-han);font-size:1.15rem;font-weight:900;
+  color:var(--red-dark);letter-spacing:2px;
+}
+.suno-emoji{font-size:1.4rem}
+.suno-id{
+  margin-left:auto;background:var(--gold);color:var(--ink);
+  padding:2px 10px;border-radius:10px;font-size:0.72rem;font-weight:700;letter-spacing:1px;
+}
+.suno-players{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.suno-players .suno-ver{
+  font-size:0.78rem;color:var(--ink);opacity:0.7;margin-bottom:2px;font-weight:700;
+}
+.suno-players audio{width:100%;height:34px}
+
 /* ====== FOOTER ====== */
 .site-footer{
   text-align:center;padding:20px;margin-top:30px;color:var(--ink);opacity:0.7;
@@ -1336,6 +1358,36 @@ body::before{
           <div id="audioPlayer" style="margin-top:8px">
             <p style="font-size:0.9rem;color:var(--ink);opacity:0.7">⏳ NLM 語音生成中…完成後自動出現播放器</p>
           </div>
+        </div>
+
+        <!-- Suno Cantonese songs (3 idioms × 2 versions each) -->
+        <div class="detail-box gold" id="sunoCard" style="grid-column:1 / -1;background:linear-gradient(135deg,#FFF8E1,#FFECB3)">
+          <h4>🎵 廣東話成語溫習歌 · Suno AI 粵語歌</h4>
+          <p style="font-size:0.86rem;color:var(--ink);opacity:0.75;margin:4px 0 12px">選 3 個成語，每個有 2 個版本（同一歌詞、唔同編曲）· 邊行邊聽都記得</p>
+          <div class="suno-songs">
+            <div class="suno-row">
+              <div class="suno-title"><span class="suno-emoji">👏</span> <span>拍案叫絕</span> <span class="suno-id">#31</span></div>
+              <div class="suno-players">
+                <div><div class="suno-ver">版本 1</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/paak_on_giu_zyut_v1.mp3"></audio></div>
+                <div><div class="suno-ver">版本 2</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/paak_on_giu_zyut_v2.mp3"></audio></div>
+              </div>
+            </div>
+            <div class="suno-row">
+              <div class="suno-title"><span class="suno-emoji">🐯</span> <span>如虎添翼</span> <span class="suno-id">#41</span></div>
+              <div class="suno-players">
+                <div><div class="suno-ver">版本 1</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/jyu_fu_tim_jik_v1.mp3"></audio></div>
+                <div><div class="suno-ver">版本 2</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/jyu_fu_tim_jik_v2.mp3"></audio></div>
+              </div>
+            </div>
+            <div class="suno-row">
+              <div class="suno-title"><span class="suno-emoji">🌧️</span> <span>未雨綢繆</span> <span class="suno-id">#44</span></div>
+              <div class="suno-players">
+                <div><div class="suno-ver">版本 1</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/mei_jyu_cau_mau_v1.mp3"></audio></div>
+                <div><div class="suno-ver">版本 2</div><audio controls preload="none" src="assets/ch_idioms/audio/suno/mei_jyu_cau_mau_v2.mp3"></audio></div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:0.76rem;color:var(--ink);opacity:0.6;margin-top:10px;text-align:center">🤖 由 Suno AI v5.5 生成 · Hong Kong Cantopop 風格 · Pro Plan 帳戶</p>
         </div>
 
         <!-- Video overview (Mandarin) -->
