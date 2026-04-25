@@ -521,6 +521,50 @@ body::before{
   border-color:var(--gold);
 }
 
+/* ====== Teacher Dashboard ====== */
+.stat-pill.teacher{cursor:pointer;background:rgba(46,125,50,0.3);border-color:var(--jade);transition:all 0.2s}
+.stat-pill.teacher:hover{transform:scale(1.06);background:rgba(46,125,50,0.5)}
+.td-controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;align-items:center;justify-content:center}
+.td-controls select, .td-controls input{
+  padding:8px 12px;border:2px solid var(--gold-dark);border-radius:8px;
+  background:#FFFDF5;font-size:0.9rem;font-family:var(--font-body);
+}
+.td-summary{
+  display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0;
+}
+.td-summary .chip{
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  border:2px solid var(--ink);padding:6px 14px;border-radius:18px;font-weight:700;font-size:0.85rem;
+}
+.td-table-wrap{
+  max-height:60vh;overflow-y:auto;border:2px solid var(--gold-dark);border-radius:10px;background:#FFFDF5;
+}
+.td-table{
+  width:100%;border-collapse:collapse;font-size:0.88rem;
+}
+.td-table th{
+  position:sticky;top:0;z-index:1;
+  background:linear-gradient(135deg,var(--red-dark),var(--red));color:var(--gold-light);
+  padding:10px 8px;text-align:left;font-weight:700;letter-spacing:1px;
+}
+.td-table td{padding:8px;border-top:1px solid rgba(218,165,32,0.3);vertical-align:middle}
+.td-table tr:hover td{background:rgba(218,165,32,0.12)}
+.td-table tr.active-student td{background:rgba(46,125,50,0.12);font-weight:700}
+.td-table .num{text-align:center;font-family:monospace;color:var(--ink);opacity:0.7}
+.td-table .stars{color:var(--gold-dark);font-weight:700}
+.td-table .coins{color:var(--red-dark);font-weight:700}
+.td-table .edx{color:var(--jade);font-weight:700}
+.td-table .name{font-weight:700}
+.td-empty{padding:30px;text-align:center;color:var(--ink);opacity:0.6}
+.td-bar-cell{
+  width:120px;height:14px;background:#F5E8C7;border-radius:7px;overflow:hidden;display:inline-block;
+  vertical-align:middle;border:1px solid var(--gold-dark);
+}
+.td-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--jade),var(--gold));border-radius:7px;
+  transition:width 0.4s;
+}
+
 /* ====== EDX Exchange ====== */
 .stat-pill.edx{cursor:pointer;transition:all 0.2s;background:rgba(218,165,32,0.3);border-color:var(--gold-light)}
 .stat-pill.edx:hover{transform:scale(1.06);background:rgba(218,165,32,0.5)}
@@ -1077,6 +1121,7 @@ body::before{
       <div class="stat-pill">⭐ <span id="starCount">0</span>/15</div>
       <div class="stat-pill">🪙 <span id="coinCount">0</span></div>
       <div class="stat-pill edx" onclick="openEdxModal()" title="點擊兌換 EDX">🏆 <span id="edxCount">0</span> EDX</div>
+      <div class="stat-pill teacher" id="teacherBtn" onclick="openTeacherDashboard()" title="教師面板：睇全班進度" style="display:none">👨‍🏫 教師面板</div>
       <div class="user-badge" id="userBadge" onclick="logout()" title="點擊登出" style="display:none">
         <span id="userName">未登入</span> · 登出
       </div>
@@ -1645,6 +1690,205 @@ async function loadCloudProgress(){
   } catch(e){ console.warn('cloud load failed', e); }
   // Also refresh EDX state
   await refreshEdxState();
+}
+
+// ============================================================
+// Teacher Dashboard (全校學生進度)
+// ============================================================
+let tdData = [];           // aggregated rows
+let tdFilterClass = 'ALL';
+let tdSortKey = 'coins';   // 'coins' | 'stars' | 'edx' | 'recent' | 'class'
+
+async function openTeacherDashboard(){
+  if(!currentUser || currentUser.role !== 'teacher'){
+    alert('🔒 此功能只開放給教師');
+    return;
+  }
+  if(!sb){
+    alert('⚠️ 雲端未連線，無法載入學生資料');
+    return;
+  }
+
+  openModal(`
+    <div style="max-width:min(1100px,96vw)">
+      <h2 style="text-align:center;color:var(--red-dark);font-family:var(--font-han);font-size:1.5rem;margin-bottom:6px">👨‍🏫 教師面板 · 全校學生進度</h2>
+      <p style="text-align:center;font-size:0.85rem;color:var(--ink);opacity:0.7;margin-bottom:8px">點欄頭排序 · 揀班別過濾 · 共 ${STUDENTS.length} 位學生</p>
+      <div class="td-controls">
+        <label>班別：
+          <select id="tdClassFilter" onchange="renderTeacherTable()">
+            <option value="ALL">全部</option>
+            ${[...new Set(STUDENTS.map(s => s.class))].sort().map(c => `<option value="${c}">${c}</option>`).join('')}
+          </select>
+        </label>
+        <label>排序：
+          <select id="tdSort" onchange="renderTeacherTable()">
+            <option value="coins">金幣最多</option>
+            <option value="stars">星最多</option>
+            <option value="edx">EDX 最多</option>
+            <option value="recent">最近活動</option>
+            <option value="class">班級+編號</option>
+          </select>
+        </label>
+        <button class="nav-btn" onclick="loadTeacherData()" style="padding:8px 16px">🔄 重新載入</button>
+      </div>
+      <div id="tdSummary" class="td-summary"></div>
+      <div class="td-table-wrap">
+        <div id="tdTable" class="td-empty">⏳ 載入中…</div>
+      </div>
+    </div>
+  `);
+
+  await loadTeacherData();
+}
+
+async function loadTeacherData(){
+  document.getElementById('tdTable').innerHTML = '⏳ 載入中…';
+  document.getElementById('tdTable').className = 'td-empty';
+
+  try {
+    // Pull progress (latest idioms_progress per student) + EDX history in parallel
+    const [pRes, eRes] = await Promise.all([
+      sb.from('student_scores')
+        .select('class,student_number,data,updated_at')
+        .eq('activity_key', 'idioms_progress')
+        .eq('chapter', CHAPTER_ID),
+      sb.from('student_edx')
+        .select('class,student_number,coins_spent,edx_earned,exchanged_at'),
+    ]);
+
+    const progress = pRes.data || [];
+    const edx = eRes.data || [];
+
+    // Aggregate
+    const byKey = new Map();
+    const keyOf = (cls, num) => `${cls}::${String(num).padStart(2,'0')}`;
+
+    // Seed with all known students
+    for(const s of STUDENTS){
+      byKey.set(keyOf(s.class, s.number), {
+        class: s.class, number: s.number, name: s.name,
+        coins: 0, stars: 0, edx: 0, edxSpent: 0, exchanges: 0,
+        lastActive: null,
+      });
+    }
+
+    // Apply progress
+    for(const p of progress){
+      const k = keyOf(p.class, p.student_number);
+      const row = byKey.get(k) || { class: p.class, number: p.student_number, name: '(未知)', coins: 0, stars: 0, edx: 0, edxSpent: 0, exchanges: 0, lastActive: null };
+      const d = p.data || {};
+      row.coins = d.coins || 0;
+      row.stars = (d.stars || []).length;
+      const ts = new Date(p.updated_at).getTime();
+      if(!row.lastActive || ts > row.lastActive) row.lastActive = ts;
+      byKey.set(k, row);
+    }
+
+    // Apply EDX
+    for(const e of edx){
+      const k = keyOf(e.class, e.student_number);
+      const row = byKey.get(k);
+      if(!row) continue;
+      row.edx += (e.edx_earned || 0);
+      row.edxSpent += (e.coins_spent || 0);
+      row.exchanges += 1;
+      const ts = new Date(e.exchanged_at).getTime();
+      if(!row.lastActive || ts > row.lastActive) row.lastActive = ts;
+    }
+
+    tdData = Array.from(byKey.values());
+    renderTeacherTable();
+  } catch(err){
+    console.error('teacher load failed:', err);
+    document.getElementById('tdTable').innerHTML = '⚠️ 載入失敗：' + (err.message || err);
+  }
+}
+
+function renderTeacherTable(){
+  const cls = document.getElementById('tdClassFilter')?.value || 'ALL';
+  const sort = document.getElementById('tdSort')?.value || 'coins';
+  let rows = tdData.slice();
+  if(cls !== 'ALL') rows = rows.filter(r => r.class === cls);
+
+  const cmp = {
+    coins: (a, b) => b.coins - a.coins,
+    stars: (a, b) => b.stars - a.stars,
+    edx:   (a, b) => b.edx - a.edx,
+    recent:(a, b) => (b.lastActive || 0) - (a.lastActive || 0),
+    class: (a, b) => (a.class + a.number).localeCompare(b.class + b.number),
+  };
+  rows.sort(cmp[sort] || cmp.coins);
+
+  // Summary
+  const active = rows.filter(r => r.lastActive).length;
+  const totalCoins = rows.reduce((s, r) => s + r.coins, 0);
+  const totalStars = rows.reduce((s, r) => s + r.stars, 0);
+  const totalEdx = rows.reduce((s, r) => s + r.edx, 0);
+  const avgCoins = rows.length ? (totalCoins / rows.length).toFixed(1) : 0;
+  document.getElementById('tdSummary').innerHTML = `
+    <div class="chip">👥 ${rows.length} 位</div>
+    <div class="chip">✅ ${active} 已開始</div>
+    <div class="chip">⭐ 共 ${totalStars}</div>
+    <div class="chip">🪙 總 ${totalCoins} (平均 ${avgCoins})</div>
+    <div class="chip">🏆 ${totalEdx} EDX</div>
+  `;
+
+  if(!rows.length){
+    document.getElementById('tdTable').innerHTML = '<div class="td-empty">冇學生資料</div>';
+    return;
+  }
+
+  const fmtTime = ts => {
+    if(!ts) return '<span style="color:#999">未開始</span>';
+    const diff = Date.now() - ts;
+    if(diff < 60_000) return '剛剛';
+    if(diff < 3_600_000) return Math.floor(diff/60_000) + ' 分鐘前';
+    if(diff < 86_400_000) return Math.floor(diff/3_600_000) + ' 小時前';
+    if(diff < 7*86_400_000) return Math.floor(diff/86_400_000) + ' 日前';
+    return new Date(ts).toLocaleDateString('zh-HK', {month:'short', day:'numeric'});
+  };
+
+  const html = `
+    <table class="td-table">
+      <thead>
+        <tr>
+          <th onclick="sortTd('class')" style="cursor:pointer">班 ▲▼</th>
+          <th onclick="sortTd('class')" style="cursor:pointer">編</th>
+          <th>姓名</th>
+          <th onclick="sortTd('stars')" style="cursor:pointer;text-align:center">⭐ 星 ▲▼</th>
+          <th onclick="sortTd('coins')" style="cursor:pointer;text-align:center">🪙 金幣 ▲▼</th>
+          <th onclick="sortTd('coins')" style="cursor:pointer">進度條</th>
+          <th onclick="sortTd('edx')" style="cursor:pointer;text-align:center">🏆 EDX ▲▼</th>
+          <th onclick="sortTd('recent')" style="cursor:pointer">最近活動 ▲▼</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => {
+          const pct = Math.min(100, (r.stars / 15) * 100);
+          return `
+            <tr>
+              <td>${r.class}</td>
+              <td class="num">${r.number}</td>
+              <td class="name">${r.name}</td>
+              <td class="stars" style="text-align:center">${r.stars}/15</td>
+              <td class="coins" style="text-align:center">${r.coins}</td>
+              <td><span class="td-bar-cell"><span class="td-bar-fill" style="width:${pct}%"></span></span></td>
+              <td class="edx" style="text-align:center">${r.edx}${r.exchanges ? ` <small style="opacity:0.6">(${r.exchanges}次)</small>` : ''}</td>
+              <td>${fmtTime(r.lastActive)}</td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+  const wrap = document.getElementById('tdTable');
+  wrap.className = '';
+  wrap.innerHTML = html;
+}
+
+function sortTd(key){
+  const sel = document.getElementById('tdSort');
+  if(sel){ sel.value = key; renderTeacherTable(); }
 }
 
 // ============================================================
@@ -3133,6 +3377,9 @@ function checkExtraAssets(){
       ? '👩‍🏫 教師'
       : `${currentUser.class} · ${currentUser.number} · ${currentUser.name}`;
     badge.style.display = '';
+    if(currentUser.role === 'teacher'){
+      document.getElementById('teacherBtn').style.display = '';
+    }
   } else {
     document.getElementById('loginOverlay').classList.add('active');
   }
