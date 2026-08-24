@@ -2420,6 +2420,11 @@ let voiceStats = { total: 0, sum: 0 };
 
 function initVoiceTab(){
   const pick = document.getElementById('voiceIdiomPick');
+  if(!IDIOMS.length){
+    pick.disabled = true;
+    return;
+  }
+  pick.disabled = false;
   if(pick.options.length <= 1){
     IDIOMS.forEach(idm => {
       const opt = document.createElement('option');
@@ -2946,6 +2951,7 @@ function checkExtraAssets(){
     loadProgress();
     renderIndex();
     renderMissions();
+    initVoiceTab();
     checkExtraAssets();
     applyPassportModeUi();
     if(passportReady && canPersistLearning()){

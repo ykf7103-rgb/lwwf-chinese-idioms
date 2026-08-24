@@ -179,6 +179,10 @@ test("本機語音文字回饋不呼叫外部評分服務", async ({ page }) => 
   await installFixture(page, "student");
   await page.goto("/");
   await page.locator('[data-tab="voice"]').click();
+  const picker = page.locator("#voiceIdiomPick");
+  await expect(picker.locator("option")).toHaveCount(16, { timeout: 30_000 });
+  const firstIdiom = await picker.locator("option").nth(1).getAttribute("value");
+  await picker.selectOption(firstIdiom);
   await page.locator("#voiceText").fill("這個成語形容非常讚歎欣賞，例如看到精彩表演時會大聲叫好。");
   await page.locator("#voiceSubmitBtn").click();
   await expect(page.locator("#voiceFeedback")).toHaveClass(/show/);
