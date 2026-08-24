@@ -1,0 +1,17 @@
+{
+  "name": "lwwf-chinese-idioms",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check passport-integration.js && node scripts/check_inline_syntax.mjs && node scripts/check_sensitive_boundaries.mjs && node scripts/check_passport_contract.mjs && git diff --check",
+    "test": "playwright test",
+    "test:smoke": "playwright test",
+    "qa": "npm run check && npm run test:smoke",
+    "dev": "http-server . -p 8765 -c-1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "http-server": "^14.1.1"
+  }
+}

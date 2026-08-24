@@ -14,3 +14,8 @@ cloudflare-worker/_gen.log
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local QA dependencies and transient reports
+node_modules/
+playwright-report/
+test-results/

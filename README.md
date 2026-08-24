@@ -46,6 +46,22 @@ python -m http.server 8765
 
 瀏覽 http://localhost:8765/
 
+## 🔐 Learning Passport
+
+- 本站沒有子站帳戶或密碼輸入；學生及教師均由中央 Learning Passport 進入。
+- 學生進度只經中央 SDK 回寫安全摘要，不會在瀏覽器保存身分工作階段。
+- 教師巡堂使用 synthetic 唯讀記憶體沙盒，不會寫入進度、讀取真實學生資料或呼叫 AI／交易服務。
+- 浮動「回報問題」由中央 SDK 提供。
+
+## ✅ 本機驗證
+
+```bash
+npm install
+npm run qa
+```
+
+驗證包括語法、敏感資料邊界、桌面／手機 Passport 情境、零巡堂持久化、破圖、console error 及水平溢出檢查。測試證據保存於 `_verification/`。
+
 ## 🏫 同系列專案
 
 - [lwwf-math-ai](https://github.com/ykf7103-rgb/lwwf-math-ai) — 樂善堂梁黃蕙芳紀念學校 · 五年級數學 AI 學習區
